@@ -1,6 +1,8 @@
 package Entity;
 
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,9 +19,9 @@ public class Articles {
     private String code;
     private String libelle;
     private int unite;
-    private Double TauxTva;
+    private BigDecimal TauxTva;
     private String description;
-    private Double prixunitaireHT;
+    private BigDecimal prixunitaireHT;
 
 
 

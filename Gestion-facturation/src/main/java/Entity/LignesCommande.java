@@ -1,5 +1,7 @@
 package Entity;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,8 +14,8 @@ public class LignesCommande {
  @GeneratedValue(strategy =  GenerationType.IDENTITY)
  private Long idLignesCommande;
  private int  quantite;
- private double prixunitaire;
- private double remise;
+ private BigDecimal prixunitaire;
+ private BigDecimal remise;
 
     @ManyToMany
     @JoinColumn(name ="idBonCommande")

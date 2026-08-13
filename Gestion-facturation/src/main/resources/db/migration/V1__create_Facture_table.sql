@@ -1,0 +1,4 @@
+CREATE TABLE Facture(
+idFacture BIGSERIAL PRIMARY KEY,
+numerofacture VARCHAR (50) NOT NULL
+);
