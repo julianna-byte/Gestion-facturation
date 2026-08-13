@@ -9,6 +9,7 @@ import lombok.Data;
 
 
 public class Utilisateur {
+    @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long idUtilisateur;
 

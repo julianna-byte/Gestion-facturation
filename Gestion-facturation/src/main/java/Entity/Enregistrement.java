@@ -21,15 +21,15 @@ public class Enregistrement {
     private Date datemodification;
     private String auteur;
 
-     @ManyToMany
+     @ManyToOne
     @JoinColumn(name ="idBonCommande")
     private BonCommande BonCommande; 
     
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name ="idFacture")
     private Facture facture;  
 
-     @ManyToMany
+     @ManyToOne
     @JoinColumn(name ="idClients")
     private Clients Clients;  
 

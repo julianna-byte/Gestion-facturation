@@ -17,11 +17,11 @@ public class LignesCommande {
  private BigDecimal prixunitaire;
  private BigDecimal remise;
 
-    @ManyToMany
-    @JoinColumn(name ="idBonCommande")
+    @ManyToOne
+    @JoinColumn(name ="idBonCommande",nullable = false )
     private BonCommande BonCommande; 
     
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name ="idArticles")
     private Articles Articles;  
 }

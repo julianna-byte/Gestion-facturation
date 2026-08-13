@@ -19,11 +19,11 @@ public class Facture {
     @JoinColumn(name ="idBonCommande")
     private BonCommande BonCommande; 
     
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name ="idUtilisateur")
     private Utilisateur Utilisateur;  
 
-     @ManyToMany
+     @ManyToOne
     @JoinColumn(name ="idClients")
     private Clients Clients;  
 }
