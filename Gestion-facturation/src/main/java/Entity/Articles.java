@@ -18,6 +18,8 @@ public class Articles {
     private String libelle;
     private int unite;
     private Double TauxTva;
+    private String description;
+    private Double prixunitaireHT;
 
 
 

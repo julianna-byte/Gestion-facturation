@@ -30,7 +30,7 @@ public class Enregistrement {
     private Facture facture;  
 
      @ManyToMany
-    @JoinColumn(name ="idClieents")
+    @JoinColumn(name ="idClients")
     private Clients Clients;  
 
 }

@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "Lignes")
+@Table(name = "LignesCommande")
 
-public class Lignes {
+public class LignesCommande {
  @Id
  @GeneratedValue(strategy =  GenerationType.IDENTITY)
- private Long idLignes;
+ private Long idLignesCommande;
  private int  quantite;
  private double prixunitaire;
  private double remise;
