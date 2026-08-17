@@ -13,9 +13,11 @@ public class Utilisateur {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long idUtilisateur;
 
-     private String identifiant;
-      private String motdepasse;
-    
+    private String identifiant;
+    private String motdepasse;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
     
 
 
