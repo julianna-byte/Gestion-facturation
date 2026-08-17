@@ -1,5 +1,7 @@
 package Entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,8 +18,8 @@ public class BonCommande {
     private double Tva; 
     private double totalTtc;
 
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name ="idClient")
-    private Clients clients;  
+    private Clients client;  
 
 }

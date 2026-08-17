@@ -14,7 +14,7 @@ public class ClientMapper {
         ClientDto dto = new ClientDto();
         dto.setIdClient(client.getIdClient());
         dto.setRccm(client.getRCCM());
-        dto.setRaisonsociale(client.getRaisonsocial());
+        dto.setRaisonsociale(client.getRaisonsociale());
         dto.setAdresse(client.getAdresse());
         dto.setVille(client.getVille());
         dto.setPays(client.getPays());
@@ -22,6 +22,7 @@ public class ClientMapper {
         dto.setEmail(client.getEmail());
         dto.setNomcontact(client.getNomcontact());
         dto.setNif(client.getNIF());
+        dto.setActif(client.getActif());
         return dto;
     }
 
@@ -29,7 +30,7 @@ public class ClientMapper {
      public Clients toEntity(ClientDto dto) {
         Clients client = new Clients();
         client.setRCCM(dto.getRccm());
-        client.setRaisonsocial(dto.getRaisonsociale());
+        client.setRaisonsociale(dto.getRaisonsociale());
         client.setAdresse(dto.getAdresse());
         client.setVille(dto.getVille());
         client.setPays(dto.getPays());
@@ -37,6 +38,7 @@ public class ClientMapper {
         client.setEmail(dto.getEmail());
         client.setNomcontact(dto.getNomcontact());
         client.setNIF(dto.getNif());
+        client.setActif(true);
         return client;
 
     }
@@ -44,7 +46,7 @@ public class ClientMapper {
 
     public void updateEntityFromDTO(ClientDto dto, Clients client) {
         client.setRCCM(dto.getRccm());
-        client.setRaisonsocial(dto.getRaisonsociale());
+        client.setRaisonsociale(dto.getRaisonsociale());
         client.setAdresse(dto.getAdresse());
         client.setVille(dto.getVille());
         client.setPays(dto.getPays());

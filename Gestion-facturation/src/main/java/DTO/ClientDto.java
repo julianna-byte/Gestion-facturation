@@ -41,4 +41,6 @@ public class ClientDto {
     @NotBlank(message = "Le NIF est obligatoire")
     private String nif;
 
+    private Boolean actif;
+
 }

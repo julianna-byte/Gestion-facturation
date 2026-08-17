@@ -13,7 +13,7 @@ public class Clients {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long idClient;
 
-    private String raisonsocial;
+    private String raisonsociale;
     private String NIF;
     private String RCCM;
     private String adresse;
@@ -22,6 +22,7 @@ public class Clients {
     private String telephone;
     private String email;
     private String nomcontact;
+    private Boolean actif;
 
 
 
