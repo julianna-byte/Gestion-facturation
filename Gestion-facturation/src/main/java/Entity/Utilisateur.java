@@ -17,8 +17,7 @@ public class Utilisateur {
     private String motdepasse;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
-    
-
 
 }
