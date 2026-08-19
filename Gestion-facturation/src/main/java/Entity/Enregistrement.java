@@ -15,10 +15,16 @@ public class Enregistrement {
     
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @Column(name = "idEnregistrement")
     private Long idEnregistrement;
 
+    @Column(name = "datecreation")
     private Date datecreation;
+
+    @Column(name = "datemodification")
     private Date datemodification;
+
+    @Column(name = "auteur")
     private String auteur;
 
      @ManyToOne

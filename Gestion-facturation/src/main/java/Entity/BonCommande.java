@@ -12,10 +12,19 @@ import lombok.Data;
 public class BonCommande {
     @Id
     @GeneratedValue(strategy =   GenerationType.IDENTITY)
+    @Column(name = "idBonCommande")
     private Long idBonCommande;
+
+    @Column(name = "numeroBon")
     private String numeroBon;
+
+    @Column(name = "totalHT")
     private double totalHT;
+
+    @Column(name = "Tva")
     private double Tva; 
+
+    @Column(name = "totalTtc")
     private double totalTtc;
 
     @ManyToOne

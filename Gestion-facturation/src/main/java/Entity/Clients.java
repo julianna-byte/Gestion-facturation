@@ -11,17 +11,37 @@ public class Clients {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @Column(name = "idClient")
     private Long idClient;
 
+    @Column(name = "raisonsociale")
     private String raisonsociale;
+
+    @Column(name = "NIF")
     private String NIF;
+
+    @Column(name = "RCCM")
     private String RCCM;
+
+    @Column(name = "adresse")
     private String adresse;
+
+    @Column(name = "ville")
     private String ville;
+
+    @Column(name = "pays")
     private String pays;
+
+    @Column(name = "telephone")
     private String telephone;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "nomcontact")
     private String nomcontact;
+
+    @Column(name = "actif")
     private Boolean actif;
 
 

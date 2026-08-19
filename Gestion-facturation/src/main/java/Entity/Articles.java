@@ -14,13 +14,25 @@ public class Articles {
 
     @Id
     @GeneratedValue(strategy =   GenerationType.IDENTITY)
+    @Column(name = "idArticles")
     private Long idArticles;
 
+    @Column(name = "code")
     private String code;
+
+    @Column(name = "libelle")
     private String libelle;
+
+    @Column(name = "unite")
     private int unite;
+
+    @Column(name = "Tauxtva")
     private BigDecimal TauxTva;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "prixunitaireHT")
     private BigDecimal prixunitaireHT;
 
 

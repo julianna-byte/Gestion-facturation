@@ -12,7 +12,10 @@ public class Facture {
     
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @Column(name = "idFacture")
     private Long idFacture;
+
+    @Column(name = "numerofacture")
     private String numerofacture;
 
      @OneToOne

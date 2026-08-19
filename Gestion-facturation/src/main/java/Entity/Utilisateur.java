@@ -11,9 +11,13 @@ import lombok.Data;
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @Column(name = "idUtilisateur")
     private Long idUtilisateur;
 
+    @Column(name = "identifiant")
     private String identifiant;
+
+    @Column(name = "motdepasse")
     private String motdepasse;
 
     @Enumerated(EnumType.STRING)
