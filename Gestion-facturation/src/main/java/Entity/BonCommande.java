@@ -2,6 +2,9 @@ package Entity;
 
 
 
+import java.util.Collection;
+
+import DTO.LigneCommandeDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,6 +32,16 @@ public class BonCommande {
 
     @ManyToOne
     @JoinColumn(name ="idClient")
-    private Clients client;  
+    private Clients client;
+
+    public Collection<LigneCommandeDto> getLignes() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getLignes'");
+    }
+
+    public Object getStatut() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getStatut'");
+    }  
 
 }
