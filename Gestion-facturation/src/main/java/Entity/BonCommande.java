@@ -2,9 +2,10 @@ package Entity;
 
 
 
-import java.util.Collection;
 
-import DTO.LigneCommandeDto;
+import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -30,18 +31,25 @@ public class BonCommande {
     @Column(name = "totalTtc")
     private double totalTtc;
 
+    @Column(name = "dateCreation")
+    private LocalDate dateCreation;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "statut", nullable = false)
+    private StatutBonCommande statut;
+
     @ManyToOne
-    @JoinColumn(name ="idClient")
+    @JoinColumn(name = "idClient")
     private Clients client;
 
-    public Collection<LigneCommandeDto> getLignes() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getLignes'");
-    }
+    @ManyToOne
+    @JoinColumn(name = "idUtilisateur")
+    private Utilisateur utilisateur;
 
-    public Object getStatut() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getStatut'");
-    }  
+    @OneToMany(mappedBy = "bonCommande", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LignesCommande> lignes;
+
+    
+    
 
 }

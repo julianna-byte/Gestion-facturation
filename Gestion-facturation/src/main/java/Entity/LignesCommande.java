@@ -26,9 +26,9 @@ public class LignesCommande {
 
     @ManyToOne
     @JoinColumn(name ="idBonCommande",nullable = false )
-    private BonCommande BonCommande; 
+    private BonCommande bonCommande; 
     
     @ManyToOne
     @JoinColumn(name ="idArticles")
-    private Articles Articles;  
+    private Articles articles;  
 }

@@ -13,13 +13,13 @@ import DTO.LigneCommandeDto;
 @Component
 public class BonCommandeMapper {
 
-
-    public BonCommandeDto toDTO(BonCommande bc) {
+    //Dto(Data Transfert Object) en entités
+     public BonCommandeDto toDTO(BonCommande bc) {
         BonCommandeDto dto = new BonCommandeDto();
         dto.setIdBonCommande(bc.getIdBonCommande());
         dto.setNumeroBon(bc.getNumeroBon());
         dto.setIdClients(bc.getClient().getIdClient());
-        dto.setStatut(bc.getStatut());
+        dto.setStatut(bc.getStatut().name()); // conversion enum -> String
         dto.setTotalHT(bc.getTotalHT());
         dto.setTva(bc.getTva());
         dto.setTotalTtc(bc.getTotalTtc());
@@ -32,6 +32,8 @@ public class BonCommandeMapper {
         return dto;
     }
 
+
+    //Dto(Data Transfert Object) en entités
     public LigneCommandeDto toLigneDTO(LignesCommande ligne) {
         LigneCommandeDto dto = new LigneCommandeDto();
         dto.setIdLignesCommande(ligne.getIdLignesCommande());
@@ -41,6 +43,9 @@ public class BonCommandeMapper {
         dto.setPrixunitaire(ligne.getPrixunitaire());
         return dto;
     }
+
+
+    
 
 
 }

@@ -13,6 +13,7 @@ import Repository.ArticlesRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,18 +21,16 @@ import java.util.List;
 public class BonCommandeService {
 
  private final BonCommandeRepository bonCommandeRepository;
+    private final ClientsRepository clientsRepository;
+    private final ArticlesRepository articlesRepository;
+    private final BonCommandeMapper bonCommandeMapper;
+    private final NumerotationService numerotationService;
 
- private final BonCommandeMapper bonCommandeMapper;
- private final ClientsRepository clientsRepository ;
- private final ArticlesRepository articlesRepository ;
- private final NumerotationService numerotationService;
-
- public BonCommandeService(BonCommandeRepository bonCommandeRepository, 
-                           BonCommandeMapper bonCommandeMapper,
-                           ArticlesRepository articlesRepository,
-                           ClientsRepository clientsRepository,
-                           NumerotationService numerotationService){
-
+    public BonCommandeService(BonCommandeRepository bonCommandeRepository,
+                               ClientsRepository clientsRepository,
+                               ArticlesRepository articlesRepository,
+                               BonCommandeMapper bonCommandeMapper,
+                               NumerotationService numerotationService) {
         this.bonCommandeRepository = bonCommandeRepository;
         this.clientsRepository = clientsRepository;
         this.articlesRepository = articlesRepository;
@@ -39,18 +38,19 @@ public class BonCommandeService {
         this.numerotationService = numerotationService;
     }
 
-    // Création d'un bon de commande en statut BROUILLON
+    // creer bon de commande
     public BonCommandeDto create(BonCommandeDto dto, Utilisateur utilisateurConnecte) {
         Clients client = clientsRepository.findById(dto.getIdClients())
-                                          .orElseThrow(() -> new RuntimeException("Client introuvable"));
+                .orElseThrow(() -> new RuntimeException("Client introuvable"));
 
         BonCommande bc = new BonCommande();
         bc.setClient(client);
         bc.setUtilisateur(utilisateurConnecte);
         bc.setStatut(StatutBonCommande.BROUILLON);
+        bc.setDateCreation(LocalDate.now());
         bc.setNumeroBon(numerotationService.genererNumeroBonCommande(utilisateurConnecte));
 
-        List<LignesCommande> lignes = construireLignes(dto.getLignes (), bc);
+        List<LignesCommande> lignes = construireLignes(dto.getLignes(), bc);
         bc.setLignes(lignes);
 
         calculerTotaux(bc);
@@ -59,8 +59,7 @@ public class BonCommandeService {
         return bonCommandeMapper.toDTO(saved);
     }
 
-
-    // Modification (uniquement si BROUILLON)
+    //modifier bon de commande
     public BonCommandeDto update(Long id, BonCommandeDto dto) {
         BonCommande bc = bonCommandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Bon de commande introuvable"));
@@ -79,9 +78,7 @@ public class BonCommandeService {
         return bonCommandeMapper.toDTO(saved);
     }
 
-    
-
-    // Validation du bon de commande (changement de statut)
+    //valider bon de commande
     public BonCommandeDto valider(Long id) {
         BonCommande bc = bonCommandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Bon de commande introuvable"));
@@ -95,7 +92,8 @@ public class BonCommandeService {
         return bonCommandeMapper.toDTO(saved);
     }
 
-    // Annulation
+    //annuler bon de commande
+
     public BonCommandeDto annuler(Long id) {
         BonCommande bc = bonCommandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Bon de commande introuvable"));
@@ -108,14 +106,16 @@ public class BonCommandeService {
         BonCommande saved = bonCommandeRepository.save(bc);
         return bonCommandeMapper.toDTO(saved);
     }
+
+    //rechercher bon de commande par identifiant
+
     public BonCommandeDto findById(Long id) {
         BonCommande bc = bonCommandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Bon de commande introuvable"));
         return bonCommandeMapper.toDTO(bc);
     }
 
-
-    // --- Méthodes privées ---
+    //construire des lignes de commande
 
     private List<LignesCommande> construireLignes(List<LigneCommandeDto> lignesDTO, BonCommande bc) {
         List<LignesCommande> lignes = new ArrayList<>();
@@ -128,21 +128,18 @@ public class BonCommandeService {
             ligne.setQuantite(ligneDTO.getQuantite());
             ligne.setRemise(ligneDTO.getRemise() != null ? ligneDTO.getRemise() : BigDecimal.ZERO);
 
-
-        // Prix pré-rempli depuis le catalogue si non fourni, sinon celui du DTO (modifiable)
             BigDecimal prix = ligneDTO.getPrixunitaire() != null
                     ? ligneDTO.getPrixunitaire()
-                    : BigDecimal.valueOf(article.getPrixunitaireHT());
+                    : article.getPrixunitaireHT();
             ligne.setPrixunitaire(prix);
 
             ligne.setBonCommande(bc);
             lignes.add(ligne);
-        }
+                 }
         return lignes;
-    }    
+    }
 
-
-    // RG-06 : tous les calculs de totaux sont effectués côté serveur
+    //calculer les totaux
     private void calculerTotaux(BonCommande bc) {
         BigDecimal totalHT = BigDecimal.ZERO;
 
@@ -153,15 +150,16 @@ public class BonCommandeService {
             totalHT = totalHT.add(montantLigne);
         }
 
-        // RG-02 : taux TVA par défaut 18%, idéalement récupéré par article
         BigDecimal tauxTva = BigDecimal.valueOf(0.18);
         BigDecimal tva = totalHT.multiply(tauxTva).setScale(0, RoundingMode.HALF_UP);
         BigDecimal totalTtc = totalHT.add(tva);
 
-        bc.setTotalHT(totalHT.setScale(0, RoundingMode.HALF_UP));
-        bc.setTva(tva);
-        bc.setTotalTtc(totalTtc);
+        bc.setTotalHT(totalHT.setScale(0, RoundingMode.HALF_UP).doubleValue());
+        bc.setTva(tva.doubleValue());
+        bc.setTotalTtc(totalTtc.doubleValue());
     }
+}   
+
 
 
 
@@ -184,4 +182,3 @@ public class BonCommandeService {
 
 
 
-}
