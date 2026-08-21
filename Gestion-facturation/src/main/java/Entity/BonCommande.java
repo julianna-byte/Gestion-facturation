@@ -41,7 +41,6 @@ public class BonCommande {
     @ManyToOne
     @JoinColumn(name = "idClient")
     private Clients client;
-
     @ManyToOne
     @JoinColumn(name = "idUtilisateur")
     private Utilisateur utilisateur;

@@ -37,6 +37,16 @@ public class DataInitializer implements CommandLineRunner {
             utilisateurRepository.save(commercial);
             System.out.println("Utilisateur commercial créé avec succès.");
         }
+        
+        if (utilisateurRepository.findByIdentifiant("admin2").isEmpty()) {
+            Utilisateur admin2 = new Utilisateur();
+            admin2.setIdentifiant("admin2");
+            admin2.setMotdepasse(passwordEncoder.encode("admin2424"));
+            admin2.setRole(Role.ADMIN);
+            utilisateurRepository.save(admin2);
+            System.out.println("Utilisateur admin créé avec succès.");
+        }
+
     }
     
 

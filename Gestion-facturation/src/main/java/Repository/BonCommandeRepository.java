@@ -5,7 +5,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 public interface BonCommandeRepository extends JpaRepository<BonCommande,Long> {
 
-    @Query("SELECT COUNT(b) FROM BonCommande b WHERE FUNCTION('MONTH', b.dateCreation) = :mois AND FUNCTION('YEAR', b.dateCreation) = :annee")
-    long countByMoisAnnee(@Param("mois") int mois, @Param("annee") int annee);
-
+    @Query("""
+        SELECT COUNT(b)
+        FROM BonCommande b
+        WHERE MONTH(b.dateCreation) = :mois
+          AND YEAR(b.dateCreation) = :annee
+        """)
+    long countByMoisAnnee(
+        @Param("mois") int mois,
+        @Param("annee") int annee
+    );
 }

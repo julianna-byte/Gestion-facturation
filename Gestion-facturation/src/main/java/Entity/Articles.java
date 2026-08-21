@@ -14,7 +14,7 @@ public class Articles {
 
     @Id
     @GeneratedValue(strategy =   GenerationType.IDENTITY)
-    @Column(name = "idArticles")
+    @Column(name = "idarticles")
     private Long idArticles;
 
     @Column(name = "code")
