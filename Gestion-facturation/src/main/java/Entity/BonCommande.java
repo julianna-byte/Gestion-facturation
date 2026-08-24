@@ -3,6 +3,7 @@ package Entity;
 
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,13 +24,13 @@ public class BonCommande {
     private String numeroBon;
 
     @Column(name = "totalHT")
-    private double totalHT;
+    private BigDecimal totalHT;
 
     @Column(name = "Tva")
-    private double Tva; 
+    private BigDecimal Tva; 
 
     @Column(name = "totalTtc")
-    private double totalTtc;
+    private BigDecimal totalTtc;
 
     @Column(name = "dateCreation")
     private LocalDate dateCreation;

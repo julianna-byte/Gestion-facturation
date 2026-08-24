@@ -139,25 +139,43 @@ public class BonCommandeService {
         return lignes;
     }
 
-    //calculer les totaux
-    private void calculerTotaux(BonCommande bc) {
-        BigDecimal totalHT = BigDecimal.ZERO;
+    //calculer totaux
+   private void calculerTotaux(BonCommande bc) {
 
-        for (LignesCommande ligne : bc.getLignes()) {
-            BigDecimal montantLigne = ligne.getPrixunitaire()
-                    .multiply(BigDecimal.valueOf(ligne.getQuantite()))
-                    .subtract(ligne.getRemise() != null ? ligne.getRemise() : BigDecimal.ZERO);
-            totalHT = totalHT.add(montantLigne);
-        }
+    BigDecimal totalHT = BigDecimal.ZERO;
 
-        BigDecimal tauxTva = BigDecimal.valueOf(0.18);
-        BigDecimal tva = totalHT.multiply(tauxTva).setScale(0, RoundingMode.HALF_UP);
-        BigDecimal totalTtc = totalHT.add(tva);
+    for (LignesCommande ligne : bc.getLignes()) {
 
-        bc.setTotalHT(totalHT.setScale(0, RoundingMode.HALF_UP).doubleValue());
-        bc.setTva(tva.doubleValue());
-        bc.setTotalTtc(totalTtc.doubleValue());
+        BigDecimal montantLigne = ligne.getPrixunitaire()
+                .multiply(BigDecimal.valueOf(ligne.getQuantite()))
+                .subtract(
+                    ligne.getRemise() != null
+                        ? ligne.getRemise()
+                        : BigDecimal.ZERO
+                );
+
+        totalHT = totalHT.add(montantLigne);
     }
+
+    // TVA de 18 %
+    BigDecimal tauxTva = new BigDecimal("0.18");
+
+    BigDecimal tva = totalHT
+            .multiply(tauxTva)
+            .setScale(2, RoundingMode.HALF_UP);
+
+    BigDecimal totalTtc = totalHT.add(tva);
+
+    bc.setTotalHT(
+            totalHT.setScale(2, RoundingMode.HALF_UP)
+    );
+
+    bc.setTva(tva);
+
+    bc.setTotalTtc(
+            totalTtc.setScale(2, RoundingMode.HALF_UP)
+    );
+}
 }   
 
 

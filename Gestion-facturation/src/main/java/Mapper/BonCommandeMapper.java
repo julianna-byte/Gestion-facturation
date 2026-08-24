@@ -19,10 +19,12 @@ public class BonCommandeMapper {
         dto.setIdBonCommande(bc.getIdBonCommande());
         dto.setNumeroBon(bc.getNumeroBon());
         dto.setIdClients(bc.getClient().getIdClient());
-        dto.setStatut(bc.getStatut().name()); // conversion enum -> String
+        dto.setStatut(bc.getStatut().name());
+
         dto.setTotalHT(bc.getTotalHT());
         dto.setTva(bc.getTva());
         dto.setTotalTtc(bc.getTotalTtc());
+
 
         List<LigneCommandeDto> lignesDTO = bc.getLignes().stream()
                 .map(this::toLigneDTO)

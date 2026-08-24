@@ -24,6 +24,7 @@ public class DataInitializer implements CommandLineRunner {
             Utilisateur admin = new Utilisateur();
             admin.setIdentifiant("admin");
             admin.setMotdepasse(passwordEncoder.encode("admin123"));
+            
             admin.setRole(Role.ADMIN);
             utilisateurRepository.save(admin);
             System.out.println("Utilisateur admin créé avec succès.");
@@ -34,6 +35,8 @@ public class DataInitializer implements CommandLineRunner {
             commercial.setIdentifiant("commercial");
             commercial.setMotdepasse(passwordEncoder.encode("commercial123"));
             commercial.setRole(Role.COMMERCIAL);
+            commercial.setNom("KODJO");
+            commercial.setPrenom("Marie");
             utilisateurRepository.save(commercial);
             System.out.println("Utilisateur commercial créé avec succès.");
         }
@@ -42,6 +45,9 @@ public class DataInitializer implements CommandLineRunner {
             Utilisateur admin2 = new Utilisateur();
             admin2.setIdentifiant("admin2");
             admin2.setMotdepasse(passwordEncoder.encode("admin2424"));
+            admin2.setNom("AMETEPE");
+            admin2.setPrenom("Jules");
+            admin2.setRole(Role.ADMIN);
             admin2.setRole(Role.ADMIN);
             utilisateurRepository.save(admin2);
             System.out.println("Utilisateur admin créé avec succès.");

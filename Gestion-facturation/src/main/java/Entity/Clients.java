@@ -20,7 +20,7 @@ public class Clients {
     @Column(name = "NIF")
     private String NIF;
 
-    @Column(name = "RCCM")
+    @Column(name = "RCCM" , length = 20)
     private String RCCM;
 
     @Column(name = "adresse")
