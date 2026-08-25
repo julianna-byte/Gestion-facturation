@@ -2,15 +2,16 @@ package Entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+import lombok.EqualsAndHashCode;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.List;
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "Facture")
 
-public class Facture {
+public class Facture extends Auditable {
 
     
     @Id
@@ -32,8 +33,8 @@ public class Facture {
     @Column(name = "totalttc")
     private BigDecimal totalTtc;
 
-    @Column(name = "datecreation")
-    private LocalDate dateCreation;
+   // @Column(name = "datecreation")
+    //private LocalDate dateCreation;
 
     @Column(name = "motifannulation")
     private String motifAnnulation;

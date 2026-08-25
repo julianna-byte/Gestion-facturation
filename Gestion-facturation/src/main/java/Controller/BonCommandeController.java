@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/bons-commande")
+@RequestMapping("/api/bons_commande")
 public class BonCommandeController {
 
      private final BonCommandeService bonCommandeService;

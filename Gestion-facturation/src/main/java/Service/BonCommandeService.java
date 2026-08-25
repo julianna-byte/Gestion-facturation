@@ -13,7 +13,6 @@ import Repository.ArticlesRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,6 @@ public class BonCommandeService {
         bc.setClient(client);
         bc.setUtilisateur(utilisateurConnecte);
         bc.setStatut(StatutBonCommande.BROUILLON);
-        bc.setDateCreation(LocalDate.now());
         bc.setNumeroBon(numerotationService.genererNumeroBonCommande(utilisateurConnecte));
 
         List<LignesCommande> lignes = construireLignes(dto.getLignes(), bc);

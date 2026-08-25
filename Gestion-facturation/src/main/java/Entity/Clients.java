@@ -2,12 +2,14 @@ package Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "Clients")
 
-public class Clients {
+public class Clients extends Auditable {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)

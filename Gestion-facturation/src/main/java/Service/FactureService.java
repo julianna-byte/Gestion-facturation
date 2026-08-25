@@ -50,7 +50,7 @@ public class FactureService {
         facture.setUtilisateur(utilisateurConnecte);
         facture.setType(type);
         facture.setStatut(StatutFacture.EMISE);
-        facture.setDateCreation(LocalDate.now());
+        
         facture.setTotalTtc(bc.getTotalTtc());
         facture.setNumerofacture(numerotationService.genererNumeroFacture(utilisateurConnecte, type));
 

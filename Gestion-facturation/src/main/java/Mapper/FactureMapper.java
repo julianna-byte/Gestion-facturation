@@ -20,7 +20,7 @@ public class FactureMapper {
         dto.setNumerofacture(facture.getNumerofacture());
         dto.setType(facture.getType().name());
         dto.setStatut(facture.getStatut().name());
-        dto.setDateCreation(facture.getDateCreation());
+    
         dto.setTotalTtc(facture.getTotalTtc());
         dto.setIdBonCommande(facture.getBonCommande() != null ? facture.getBonCommande().getIdBonCommande() : null);
         dto.setIdClient(facture.getClients().getIdClient());

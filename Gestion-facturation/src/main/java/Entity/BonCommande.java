@@ -6,15 +6,17 @@ package Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-
+import lombok.EqualsAndHashCode;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "BonCommande")
 
-public class BonCommande {
+
+public class BonCommande extends Auditable {
     @Id
     @GeneratedValue(strategy =   GenerationType.IDENTITY)
     @Column(name = "idBonCommande")
@@ -32,8 +34,8 @@ public class BonCommande {
     @Column(name = "totalTtc")
     private BigDecimal totalTtc;
 
-    @Column(name = "dateCreation")
-    private LocalDate dateCreation;
+   // @Column(name = "dateCreation")
+   // private LocalDate dateCreation;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "statut", nullable = false)
