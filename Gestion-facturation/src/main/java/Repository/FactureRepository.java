@@ -18,16 +18,16 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
     boolean existsByBonCommandeAndType(BonCommande bonCommande, TypeFacture type);
 
     // Compte les factures créées dans un mois/année donné, pour la numérotation automatique
-    @Query("SELECT COUNT(f) FROM Facture f WHERE FUNCTION('MONTH', f.dateCreation) = :mois AND FUNCTION('YEAR', f.dateCreation) = :annee")
+    @Query("SELECT COUNT(f) FROM Facture f WHERE EXTRACT(MONTH FROM f.dateCreation) = :mois AND EXTRACT(YEAR FROM f.dateCreation) = :annee")
     long countByMoisAnnee(@Param("mois") int mois, @Param("annee") int annee);
 
     // ---- Méthodes pour le tableau de bord ----
 
     // Somme des factures non annulées créées entre deux dates (CA du mois)
-    @Query("SELECT COALESCE(SUM(f.totalTtc), 0) FROM Facture f " +
+     @Query("SELECT COALESCE(SUM(f.totalTtc), 0) FROM Facture f " +
            "WHERE f.dateCreation BETWEEN :debut AND :fin AND f.statut <> Entity.StatutFacture.ANNULEE")
     BigDecimal calculerChiffreAffaires(@Param("debut") LocalDateTime debut, @Param("fin") LocalDateTime fin);
-
+    
     // Nombre de factures impayées (statuts passés en paramètre : EMISE, PARTIELLEMENT_PAYEE)
     long countByStatutIn(List<StatutFacture> statuts);
 

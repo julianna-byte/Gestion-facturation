@@ -41,7 +41,7 @@ public class Facture extends Auditable {
 
     @ManyToOne
     @JoinColumn(name ="idBonCommande")
-    private BonCommande BonCommande; 
+    private BonCommande bonCommande; 
     
     @ManyToOne
     @JoinColumn(name ="idUtilisateur")

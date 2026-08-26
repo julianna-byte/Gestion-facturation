@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
+import { useAuth } from "../context/useAuth";
 
 export default function Login() {
   const [identifiant, setIdentifiant] = useState("");
@@ -10,13 +11,16 @@ export default function Login() {
 
   const navigate = useNavigate();
 
+  const { loginUser } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErreur("");
     setChargement(true);
 
     try {
-      await login(identifiant, motdepasse);
+       const data = await login(identifiant, motdepasse);
+       loginUser(data);
       navigate("/dashboard");
     } catch (err) {
       setErreur(err.message);
