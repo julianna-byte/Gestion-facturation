@@ -113,6 +113,13 @@ public class BonCommandeService {
         return bonCommandeMapper.toDTO(bc);
     }
 
+    // liste paginee de tous les bons de commande
+     public org.springframework.data.domain.Page<BonCommandeDto> findAll(int page, int size) {
+        org.springframework.data.domain.Pageable pageable =
+                org.springframework.data.domain.PageRequest.of(page, size);
+        return bonCommandeRepository.findAll(pageable).map(bonCommandeMapper::toDTO);
+    }
+
     //construire des lignes de commande
 
     private List<LignesCommande> construireLignes(List<LigneCommandeDto> lignesDTO, BonCommande bc) {

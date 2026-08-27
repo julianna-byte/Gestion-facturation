@@ -26,6 +26,7 @@ public class BonCommandeController {
         this.utilisateurRepository = utilisateurRepository;
     }
 
+    //creer bons de commande
     @PostMapping
     public ResponseEntity<BonCommandeDto> create(@Valid @RequestBody BonCommandeDto dto,
                                                    Authentication authentication) {
@@ -38,10 +39,21 @@ public class BonCommandeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+
+    //rechercher par identifiant
     @GetMapping("/{id}")
     public ResponseEntity<BonCommandeDto> getById (@PathVariable Long id){
 
         return ResponseEntity.ok(bonCommandeService.findById(id));
+    }
+
+  // Liste paginee des bons de commande
+
+    @GetMapping("/paginated")
+    public ResponseEntity<org.springframework.data.domain.Page<BonCommandeDto>> getAllPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(bonCommandeService.findAll(page, size));
     }
 
     @PutMapping("/{id}")
@@ -50,11 +62,15 @@ public class BonCommandeController {
         return ResponseEntity.ok(bonCommandeService.update(id, dto));
     }
 
+    //valider bons de commande
+
     @GetMapping("/{id}/valider")
         public ResponseEntity<BonCommandeDto> valider (@PathVariable Long id){
             return ResponseEntity.ok(bonCommandeService.valider(id));
     
     }
+
+    //annuler bons de commande
 
     @GetMapping("/{id}/annuler")
         public ResponseEntity<BonCommandeDto> annuler (@PathVariable Long id){

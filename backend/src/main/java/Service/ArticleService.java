@@ -21,7 +21,7 @@ public ArticleService(ArticlesRepository articleRepository, ArticleMapper articl
     this.articlesRepository = articleRepository;
     this.articleMapper = articleMapper;
 }
-
+// Avoir tous les clients
     public List<ArticleDto> findAll() {
         return articlesRepository.findAll()
                 .stream()
@@ -33,7 +33,7 @@ public ArticleService(ArticlesRepository articleRepository, ArticleMapper articl
         Pageable pageable = PageRequest.of(page, size);
         return articlesRepository.findAll(pageable).map(articleMapper::toDTO);
     }
-
+  //rechercher par identifiants
     public ArticleDto findById(Long id) {
         Articles article = articlesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Article introuvable avec l'id : " + id));
@@ -44,19 +44,19 @@ public ArticleService(ArticlesRepository articleRepository, ArticleMapper articl
     return articlesRepository.findByLibelleContainingIgnoreCase(libelle, pageable)
             .map(articleMapper::toDTO);
     }
-
+ //creer un article
     public ArticleDto create(ArticleDto dto) {
         Articles article = articleMapper.toEntity(dto);
         return articleMapper.toDTO(articlesRepository.save(article));
     }
-
+  //modifier un article
     public ArticleDto update(Long id, ArticleDto dto) {
         Articles article = articlesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Article introuvable avec l'id : " + id));
         articleMapper.updateEntityFromDTO(dto, article);
         return articleMapper.toDTO(articlesRepository.save(article));
     }
-
+     //supprimer un article
      public void delete(Long id) {
         Articles article = articlesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Article introuvable avec l'id : " + id));

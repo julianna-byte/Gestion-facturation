@@ -20,6 +20,7 @@ public class BonCommandeMapper {
         dto.setNumeroBon(bc.getNumeroBon());
         dto.setIdClients(bc.getClient().getIdClient());
         dto.setStatut(bc.getStatut().name());
+        dto.setNomClient(bc.getClient().getRaisonsociale());
 
         dto.setTotalHT(bc.getTotalHT());
         dto.setTva(bc.getTva());

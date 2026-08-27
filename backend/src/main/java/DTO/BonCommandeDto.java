@@ -15,6 +15,7 @@ public class BonCommandeDto {
     @NotNull(message = "Le client est obligatoire")
     private Long idClients;
 
+    private String nomClient;
     private Long idBonCommande;
     private String numeroBon;
     private BigDecimal totalHT;
