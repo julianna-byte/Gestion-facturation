@@ -7,7 +7,7 @@ const CHAMPS_VIDES = {
   libelle: "",
   description: "",
   unite: "",
-  tauxTva: "",
+  tauxTva: 18, // valeur par defaut selon RG-02 (18%), modifiable par article
   prixunitaireHT: "",
 };
 

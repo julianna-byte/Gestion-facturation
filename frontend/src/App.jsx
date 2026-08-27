@@ -7,6 +7,13 @@ import ClientList from "./pages/ClientList";
 import ClientForm from "./pages/clientForm";
 import ArticleList from "./pages/ArticleList";
 import ArticleForm from "./pages/ArticleForm";
+import BonCommandeList from "./pages/BonCommandeList";
+import BonCommandeForm from "./pages/BonCommandeForm";
+import BonCommandeDetail from "./pages/BonCommandeDetail";
+import FactureList from "./pages/FactureList";
+import FactureDetail from "./pages/FactureDetail";
+import Layout from "./components/Layout";
+
 function App() {
   return (
     <AuthProvider>
@@ -18,7 +25,7 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard />
+               <Layout><Dashboard /></Layout> 
               </ProtectedRoute>
             }
           />
@@ -27,7 +34,7 @@ function App() {
            path="/clients"
            element={
            <ProtectedRoute>
-             <ClientList />
+             <Layout><ClientList /></Layout>
            </ProtectedRoute>
             }
           />
@@ -36,7 +43,7 @@ function App() {
            path="/clients/nouveau"
            element={
            <ProtectedRoute>
-              <ClientForm />
+             <Layout><ClientForm /></Layout> 
             </ProtectedRoute>
             }
          />
@@ -45,7 +52,7 @@ function App() {
             path="/clients/:id"
             element={
             <ProtectedRoute>
-              <ClientForm />
+              <Layout><ClientForm /></Layout>
             </ProtectedRoute>
            }
          />
@@ -54,7 +61,7 @@ function App() {
             path="/catalogue"
             element={
             <ProtectedRoute>
-              <ArticleList />
+              <Layout><ArticleList /></Layout>
             </ProtectedRoute>
             }
           />
@@ -63,7 +70,7 @@ function App() {
             path="/catalogue/nouveau"
             element={
               <ProtectedRoute requiredRole="ADMIN">
-                <ArticleForm />
+                <Layout><ArticleForm /></Layout>
               </ProtectedRoute>
             }
           />
@@ -73,24 +80,65 @@ function App() {
             path="/catalogue/:id"
             element={
               <ProtectedRoute requiredRole="ADMIN">
-                <ArticleForm />
+                <Layout><ArticleForm /></Layout>
               </ProtectedRoute>
             }
           />
 
-
-          {/* Exemple de route reservee ADMIN, a decommenter/adapter
-              quand l'ecran catalogue existera :
-          <Route
-            path="/catalogue"
+            <Route
+            path="/catalogue/:id"
             element={
               <ProtectedRoute requiredRole="ADMIN">
-                <ArticlesAdmin />
+                <Layout><ArticleForm /></Layout>
               </ProtectedRoute>
             }
           />
-          */}
 
+          <Route
+            path="/bons-commande"
+            element={
+              <ProtectedRoute>
+                <Layout><BonCommandeList /></Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/bons-commande/nouveau"
+            element={
+              <ProtectedRoute>
+                <Layout><BonCommandeForm /></Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/bons-commande/:id"
+            element={
+              <ProtectedRoute>
+                <Layout><BonCommandeDetail /></Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/factures"
+            element={
+              <ProtectedRoute>
+                <Layout><FactureList /></Layout>
+              </ProtectedRoute>
+            }
+          />
+
+           <Route
+            path="/factures/:id"
+            element={
+              <ProtectedRoute>
+                <Layout><FactureDetail /></Layout>
+              </ProtectedRoute>
+            }
+          />
+          
           <Route path="/acces-refuse" element={<div>Accès refusé</div>} />
         </Routes>
       </BrowserRouter>
