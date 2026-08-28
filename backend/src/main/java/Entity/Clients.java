@@ -22,7 +22,7 @@ public class Clients extends Auditable {
     @Column(name = "NIF")
     private String NIF;
 
-    @Column(name = "RCCM" , length = 20)
+    @Column(name = "RCCM" , length = 30)
     private String RCCM;
 
     @Column(name = "adresse")

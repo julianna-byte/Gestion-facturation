@@ -88,7 +88,7 @@ export default function FactureDetail() {
   const handleTelechargerPdf = async () => {
     try {
       await telechargerPdfFacture(id);
-    } catch (err) {
+    } catch  {
       alert("Erreur lors du téléchargement du PDF.");
     }
   };
