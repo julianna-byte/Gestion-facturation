@@ -12,6 +12,9 @@ import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/bons_commande")
@@ -57,7 +60,7 @@ public class BonCommandeController {
         description = "Retourne une page de bons de commande selon les paramètres fournis"
     )
     @ApiResponse(responseCode = "200", description = "Page de bons de commande récupérée")
-    
+
     @GetMapping("/paginated")
     public ResponseEntity<org.springframework.data.domain.Page<BonCommandeDto>> getAllPaginated(
             @RequestParam(defaultValue = "0") int page,
