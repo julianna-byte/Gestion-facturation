@@ -20,8 +20,19 @@ public class AuthController {
     private final UtilisateurRepository utilisateurRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+
+
+     @Operation(
+        summary = "Authentification utilisateur",
+        description = "Permet à un utilisateur de se connecter avec son identifiant et mot de passe. Retourne un token JWT et le rôle associé."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Connexion réussie, token JWT généré"),
+        @ApiResponse(responseCode = "400", description = "Requête invalide"),
+        @ApiResponse(responseCode = "401", description = "Identifiants invalides")
+    })
     
-     @PostMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
         Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(request.getIdentifiant())
                 .orElseThrow(() -> new RuntimeException("Identifiants invalides"));

@@ -16,6 +16,15 @@ public class DashboardController {
     public DashboardController(DashboardService dashboardService) {
         this.dashboardService = dashboardService;
     }
+
+    @Operation(
+        summary = "Obtenir le tableau de bord",
+        description = "Retourne les données agrégées du dashboard (statistiques, indicateurs, etc.)"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Dashboard généré avec succès"),
+        @ApiResponse(responseCode = "401", description = "Non autorisé - token manquant ou invalide")
+    })
  
     @GetMapping
     public ResponseEntity<DashboardDto> getDashboard() {
