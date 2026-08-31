@@ -40,6 +40,13 @@ public class FactureController {
         return ResponseEntity.ok(factureService.genererDepuisBonCommande(idBonCommande, type, utilisateur));
     }
 
+    @GetMapping("/paginated")
+    public ResponseEntity<org.springframework.data.domain.Page<FactureDto>> getAllPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(factureService.findAll(page, size));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<FactureDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(factureService.findById(id));

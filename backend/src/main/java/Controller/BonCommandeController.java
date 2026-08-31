@@ -40,14 +40,7 @@ public class BonCommandeController {
     }
 
 
-    //rechercher par identifiant
-    @GetMapping("/{id}")
-    public ResponseEntity<BonCommandeDto> getById (@PathVariable Long id){
-
-        return ResponseEntity.ok(bonCommandeService.findById(id));
-    }
-
-  // Liste paginee des bons de commande
+    // Liste paginee des bons de commande
 
     @GetMapping("/paginated")
     public ResponseEntity<org.springframework.data.domain.Page<BonCommandeDto>> getAllPaginated(
@@ -55,6 +48,16 @@ public class BonCommandeController {
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(bonCommandeService.findAll(page, size));
     }
+
+    
+    //rechercher par identifiant
+    @GetMapping("/{id}")
+    public ResponseEntity<BonCommandeDto> getById (@PathVariable Long id){
+
+        return ResponseEntity.ok(bonCommandeService.findById(id));
+    }
+
+  
 
     @PutMapping("/{id}")
     public ResponseEntity<BonCommandeDto> update (@PathVariable Long id, @Valid @RequestBody BonCommandeDto dto){

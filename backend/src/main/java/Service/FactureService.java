@@ -121,6 +121,12 @@ public class FactureService {
         return factureMapper.toDTO(facture);
     }
 
+        public org.springframework.data.domain.Page<FactureDto> findAll(int page, int size) {
+         org.springframework.data.domain.Pageable pageable =
+            org.springframework.data.domain.PageRequest.of(page, size);
+    return factureRepository.findAll(pageable).map(factureMapper::toDTO);
+    }
+
 
 
 
