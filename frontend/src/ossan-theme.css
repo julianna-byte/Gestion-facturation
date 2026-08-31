@@ -1,1 +1,468 @@
+/* ==========================================================================
+   Variables globales — charte OSSAN ASUR
+   ========================================================================== */
+:root {
+  --ossan-navy: #0B2545;
+  --ossan-navy-light: #16345E;
+  --ossan-orange: #F2790C;
+  --ossan-orange-dark: #C2560A;
+  --ossan-orange-light: #FCE8D6;
+  --ossan-bg: #F5F6F8;
+  --ossan-surface: #FFFFFF;
+  --ossan-border: #E2E5EA;
+  --ossan-text: #1A1F2B;
+  --ossan-text-muted: #6B7280;
+  --ossan-success-bg: #DDEFE1;
+  --ossan-success-text: #1F6D3A;
+  --ossan-warning-bg: #FCE8D6;
+  --ossan-warning-text: #8A3E0A;
+  --ossan-danger-bg: #FBE1E1;
+  --ossan-danger-text: #9B2C2C;
+  --ossan-radius: 8px;
+}
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--ossan-bg);
+  color: var(--ossan-text);
+}
+
+/* ==========================================================================
+   Sidebar (Layout.jsx)
+   ========================================================================== */
+.layout-with-sidebar {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: var(--ossan-navy);
+  width: 220px;
+  flex-shrink: 0;
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Bloc logo + nom en haut de la sidebar */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  padding: 0 6px;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Image du logo dans la sidebar.
+   Le fichier reel doit etre place a : frontend/public/logo.png
+   Reference dans le JSX via <img src="/logo.png" ... /> */
+.sidebar-logo-img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: var(--ossan-radius);
+  color: #B8C4D6;
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+}
+
+.sidebar-link:hover {
+  background: var(--ossan-navy-light);
+  color: #FFFFFF;
+}
+
+/* Classe "active" ajoutee automatiquement par NavLink de react-router-dom
+   sur le lien correspondant a la page actuellement affichee */
+.sidebar-link.active {
+  background: var(--ossan-navy-light);
+  color: #FFFFFF;
+  border-left-color: var(--ossan-orange);
+  font-weight: 500;
+}
+
+.sidebar-user {
+  margin-top: auto;
+  border-top: 0.5px solid #22385A;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #B8C4D6;
+}
+
+.sidebar-user button {
+  background: transparent;
+  border: 1px solid #3A4E6B;
+  color: #FFFFFF;
+  padding: 5px 10px;
+  border-radius: var(--ossan-radius);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.sidebar-user button:hover {
+  background: var(--ossan-navy-light);
+}
+
+.layout-content {
+  flex: 1;
+  padding: 24px 32px;
+  max-width: 1200px;
+}
+
+/* ==========================================================================
+   Titres et en-têtes de page
+   ========================================================================== */
+h1 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ossan-navy);
+  margin: 0 0 16px;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ossan-navy);
+  margin: 24px 0 12px;
+}
+
+.client-list-header,
+.article-list-header,
+.boncommande-list-header,
+.facture-list header,
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   Boutons
+   ========================================================================== */
+button {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: var(--ossan-radius);
+  border: 1px solid var(--ossan-border);
+  background: var(--ossan-surface);
+  color: var(--ossan-text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+button:hover {
+  background: var(--ossan-bg);
+  border-color: var(--ossan-orange);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Bouton principal (actions positives : creer, enregistrer, valider) */
+.client-list-header button,
+.article-list-header button,
+.boncommande-list-header button,
+.form-actions button[type="submit"] {
+  background: var(--ossan-orange);
+  border-color: var(--ossan-orange);
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.client-list-header button:hover,
+.article-list-header button:hover,
+.boncommande-list-header button:hover,
+.form-actions button[type="submit"]:hover {
+  background: var(--ossan-orange-dark);
+  border-color: var(--ossan-orange-dark);
+}
+
+/* ==========================================================================
+   Cartes de statistiques (Dashboard.jsx)
+   ========================================================================== */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.dashboard-card {
+  background: var(--ossan-surface);
+  border: 1px solid var(--ossan-border);
+  border-radius: var(--ossan-radius);
+  padding: 18px 20px;
+}
+
+.dashboard-card h2 {
+  font-size: 13px;
+  color: var(--ossan-text-muted);
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+
+.dashboard-card-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ossan-orange-dark);
+  margin: 0;
+}
+
+.dashboard-top-clients table {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Formulaires — disposition en 1 colonne (verticale)
+   ========================================================================== */
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 380px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ossan-text);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 9px 12px;
+  border: 1px solid var(--ossan-border);
+  border-radius: var(--ossan-radius);
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--ossan-surface);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--ossan-orange);
+  box-shadow: 0 0 0 3px var(--ossan-orange-light);
+}
+
+.erreur-champ {
+  font-size: 12px;
+  color: var(--ossan-danger-text);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.erreur {
+  background: var(--ossan-danger-bg);
+  color: var(--ossan-danger-text);
+  padding: 10px 14px;
+  border-radius: var(--ossan-radius);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.note {
+  font-size: 12px;
+  color: var(--ossan-text-muted);
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Login (Login.jsx)
+   ========================================================================== */
+.login-container {
+  max-width: 380px;
+  margin: 80px auto;
+  background: var(--ossan-surface);
+  border: 1px solid var(--ossan-border);
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.login-container h1 {
+  text-align: center;
+}
+
+/* Bloc logo + nom + sous-titre au-dessus du formulaire de connexion */
+.login-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+/* Image du logo sur la page de connexion.
+   Meme fichier que la sidebar : frontend/public/logo.png
+   Reference dans le JSX via <img src="/logo.png" ... /> */
+.login-logo img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.login-logo span {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ossan-navy);
+}
+
+.login-logo p {
+  font-size: 13px;
+  color: var(--ossan-text-muted);
+  margin: 0;
+}
+
+.login-container button[type="submit"] {
+  background: var(--ossan-orange);
+  border-color: var(--ossan-orange);
+  color: #FFFFFF;
+  font-weight: 500;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.login-container button[type="submit"]:hover {
+  background: var(--ossan-orange-dark);
+}
+
+/* ==========================================================================
+   Tableaux (listes clients, articles, bons de commande, factures)
+   ========================================================================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--ossan-surface);
+  border: 1px solid var(--ossan-border);
+  border-radius: var(--ossan-radius);
+  overflow: hidden;
+  font-size: 13px;
+}
+
+thead {
+  background: var(--ossan-bg);
+}
+
+th {
+  text-align: left;
+  padding: 10px 14px;
+  font-weight: 500;
+  color: var(--ossan-text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+td {
+  padding: 10px 14px;
+  border-top: 1px solid var(--ossan-border);
+}
+
+tbody tr:hover {
+  background: var(--ossan-bg);
+}
+
+td button {
+  padding: 5px 10px;
+  font-size: 12px;
+  margin-right: 6px;
+}
+
+/* ==========================================================================
+   Badges de statut (BonCommandeList, FactureList)
+   ========================================================================== */
+span[style*="background"] {
+  display: inline-block;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Recherche et pagination
+   ========================================================================== */
+.client-search,
+.article-search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.client-search input,
+.article-search input {
+  flex: 1;
+  max-width: 320px;
+  padding: 8px 12px;
+  border: 1px solid var(--ossan-border);
+  border-radius: var(--ossan-radius);
+  font-size: 13px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ossan-text-muted);
+}
+
+/* ==========================================================================
+   Détails (BonCommandeDetail, FactureDetail)
+   ========================================================================== */
+.recapitulatif {
+  background: var(--ossan-surface);
+  border: 1px solid var(--ossan-border);
+  border-radius: var(--ossan-radius);
+  padding: 16px 20px;
+  margin: 16px 0;
+  max-width: 400px;
+}
+
+.recapitulatif p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.reglement-form {
+  background: var(--ossan-surface);
+  border: 1px solid var(--ossan-border);
+  border-radius: var(--ossan-radius);
+  padding: 16px 20px;
+  max-width: 400px;
+}
