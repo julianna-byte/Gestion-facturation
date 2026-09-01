@@ -35,6 +35,9 @@ public class Articles {
     @Column(name = "prixunitaireHT")
     private BigDecimal prixunitaireHT;
 
+    @Column(name = "margeCommerciale")
+    private BigDecimal margeCommerciale;
+
 
 
 

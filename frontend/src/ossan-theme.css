@@ -1,6 +1,6 @@
-/* ==========================================================================
+/* 
    Variables globales — charte OSSAN ASUR
-   ========================================================================== */
+    */
 :root {
   --ossan-navy: #0B2545;
   --ossan-navy-light: #16345E;
@@ -32,9 +32,9 @@ body {
   color: var(--ossan-text);
 }
 
-/* ==========================================================================
+/* 
    Sidebar (Layout.jsx)
-   ========================================================================== */
+    */
 .layout-with-sidebar {
   display: flex;
   min-height: 100vh;
@@ -63,8 +63,7 @@ body {
 }
 
 /* Image du logo dans la sidebar.
-   Le fichier reel doit etre place a : frontend/public/logo.png
-   Reference dans le JSX via <img src="/logo.png" ... /> */
+    */
 .sidebar-logo-img {
   width: 30px;
   height: 30px;
@@ -135,9 +134,96 @@ body {
   max-width: 1200px;
 }
 
-/* ==========================================================================
+.client-form,
+.article-form {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Responsive — sidebar et contenu s'adaptent aux petits ecrans */
+
+@media(max-width : 900px) {
+.layout-with-sidebar {
+ flex-direction: column;
+
+}
+
+.sidebar {
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px 16px;
+  overflow-x: auto;
+  gap: 8px;
+}
+
+.sidebar-logo {
+    margin-bottom: 0;
+    margin-right: 12px;
+  }
+
+  .sidebar-links {
+    flex-direction: row;
+    gap: 4px;
+  }
+
+  .sidebar-link {
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .sidebar-link.active {
+    border-left: none;
+    border-bottom-color: var(--ossan-orange);
+  }
+
+  .sidebar-user {
+    margin-top: 0;
+    margin-left: auto;
+    border-top: none;
+    padding-top: 0;
+    flex-shrink: 0;
+  }
+
+  .layout-content {
+    padding: 16px;
+  }
+
+  .client-form,
+  .article-form {
+    max-width: 100%;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    font-size: 12px;
+    overflow-x: auto;
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-group {
+    max-width: 100%;
+  }
+
+  .login-container {
+    margin: 40px 16px;
+    padding: 24px 20px;
+  }
+}
+
+
+
+
+
+/* 
    Titres et en-têtes de page
-   ========================================================================== */
+    */
 h1 {
   font-size: 22px;
   font-weight: 600;
@@ -163,9 +249,9 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* ==========================================================================
+/* 
    Boutons
-   ========================================================================== */
+    */
 button {
   font-family: inherit;
   font-size: 13px;
@@ -207,9 +293,9 @@ button:disabled {
   border-color: var(--ossan-orange-dark);
 }
 
-/* ==========================================================================
+/* 
    Cartes de statistiques (Dashboard.jsx)
-   ========================================================================== */
+   */
 .dashboard-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -242,9 +328,9 @@ button:disabled {
   width: 100%;
 }
 
-/* ==========================================================================
+/* 
    Formulaires — disposition en 1 colonne (verticale)
-   ========================================================================== */
+    */
 .form-group {
   margin-bottom: 16px;
   display: flex;
@@ -304,9 +390,9 @@ button:disabled {
   font-style: italic;
 }
 
-/* ==========================================================================
+/* 
    Login (Login.jsx)
-   ========================================================================== */
+   */
 .login-container {
   max-width: 380px;
   margin: 80px auto;
@@ -333,8 +419,8 @@ button:disabled {
    Meme fichier que la sidebar : frontend/public/logo.png
    Reference dans le JSX via <img src="/logo.png" ... /> */
 .login-logo img {
-  width: 52px;
-  height: 52px;
+  width: 90px;
+  height: 90px;
   object-fit: contain;
 }
 
@@ -363,9 +449,9 @@ button:disabled {
   background: var(--ossan-orange-dark);
 }
 
-/* ==========================================================================
+/* 
    Tableaux (listes clients, articles, bons de commande, factures)
-   ========================================================================== */
+   */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -405,17 +491,17 @@ td button {
   margin-right: 6px;
 }
 
-/* ==========================================================================
+/* 
    Badges de statut (BonCommandeList, FactureList)
-   ========================================================================== */
+   */
 span[style*="background"] {
   display: inline-block;
   font-weight: 500;
 }
 
-/* ==========================================================================
+/* 
    Recherche et pagination
-   ========================================================================== */
+   */
 .client-search,
 .article-search {
   display: flex;
@@ -442,9 +528,9 @@ span[style*="background"] {
   color: var(--ossan-text-muted);
 }
 
-/* ==========================================================================
+/* 
    Détails (BonCommandeDetail, FactureDetail)
-   ========================================================================== */
+   */
 .recapitulatif {
   background: var(--ossan-surface);
   border: 1px solid var(--ossan-border);
@@ -465,4 +551,9 @@ span[style*="background"] {
   border-radius: var(--ossan-radius);
   padding: 16px 20px;
   max-width: 400px;
+}
+
+body:has(.login-container) {
+  background: linear-gradient(135deg, #0B2545 0%, #16345E 60%, #F2790C 100%);
+  min-height: 100vh;
 }

@@ -39,6 +39,9 @@ public class Facture extends Auditable {
     @Column(name = "motifannulation")
     private String motifAnnulation;
 
+    @Column(name = "conditionspersonnalisees", columnDefinition = "TEXT")
+    private String conditionsPersonnalisees;
+
     @ManyToOne
     @JoinColumn(name ="idBonCommande")
     private BonCommande bonCommande; 

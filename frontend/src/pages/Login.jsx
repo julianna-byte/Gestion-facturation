@@ -8,22 +8,20 @@ export default function Login() {
   const [motdepasse, setMotdepasse] = useState("");
   const [erreur, setErreur] = useState("");
   const [chargement, setChargement] = useState(false);
-
-  const navigate = useNavigate();
-
   const { loginUser } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErreur("");
     setChargement(true);
-
     try {
-       const data = await login(identifiant, motdepasse);
-       loginUser(data);
+      const data = await login(identifiant, motdepasse);
+      loginUser(data);
       navigate("/dashboard");
     } catch (err) {
-      setErreur(err.message);
+      const backendMessage = err.response?.data?.message;
+      setErreur(backendMessage || "Identifiant ou mot de passe incorrect");
     } finally {
       setChargement(false);
     }
@@ -31,9 +29,18 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <h1>Connexion</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
+      
+        <div className="login-logo">
+         <img src="/Logotype_Ossan Asur Noir.png" alt="OSSAN ASUR" />
+         {/*<span>OSSAN ASUR</span>*/}
+         <p>Gestion de la facturation</p>
+        </div>
+      
+
+       <form onSubmit={handleSubmit}>
+        {erreur && <p className="erreur">{erreur}</p>}
+
+        <div className="form-group">
           <label htmlFor="identifiant">Identifiant</label>
           <input
             id="identifiant"
@@ -41,10 +48,11 @@ export default function Login() {
             value={identifiant}
             onChange={(e) => setIdentifiant(e.target.value)}
             required
+            autoFocus
           />
         </div>
 
-        <div>
+        <div className="form-group">
           <label htmlFor="motdepasse">Mot de passe</label>
           <input
             id="motdepasse"
@@ -55,13 +63,12 @@ export default function Login() {
           />
         </div>
 
-        {erreur && <p className="erreur">{erreur}</p>}
-
         <button type="submit" disabled={chargement}>
           {chargement ? "Connexion..." : "Se connecter"}
         </button>
       </form>
+      
     </div>
+    
   );
 }
-
