@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 
 export default function Layout({ children }) {
@@ -11,20 +11,40 @@ export default function Layout({ children }) {
   };
 
   return (
-    <div className="layout">
-      <nav className="navbar">
-        <div className="navbar-links">
-          <Link to="/dashboard">Tableau de bord</Link>
-          <Link to="/clients">Clients</Link>
-          <Link to="/catalogue">Catalogue</Link>
-          <Link to="/bons-commande">Bons de commande</Link>
-          <Link to="/factures">Factures</Link>
+    <div className="layout-with-sidebar">
+      <aside className="sidebar">
+        <div className="sidebar-logo">
+          <img 
+          src="/Logotype_Ossan_Assur.png"
+           alt="OSSAN ASUR"
+            className="sidebar-logo-img" 
+            style={{width:"140px", height:"auto"}} />
+           {/*<span>OSSAN ASUR</span>*/}
         </div>
-        <div className="navbar-user">
-          <span>Rôle : {role}</span>
+
+        <nav className="sidebar-links">
+          <NavLink to="/dashboard" className="sidebar-link">
+            Tableau de bord
+          </NavLink>
+          <NavLink to="/clients" className="sidebar-link">
+            Clients
+          </NavLink>
+          <NavLink to="/catalogue" className="sidebar-link">
+            Catalogue
+          </NavLink>
+          <NavLink to="/bons-commande" className="sidebar-link">
+            Bons de commande
+          </NavLink>
+          <NavLink to="/factures" className="sidebar-link">
+            Factures
+          </NavLink>
+        </nav>
+
+        <div className="sidebar-user">
+          <span>{role}</span>
           <button onClick={handleLogout}>Déconnexion</button>
         </div>
-      </nav>
+      </aside>
 
       <main className="layout-content">{children}</main>
     </div>

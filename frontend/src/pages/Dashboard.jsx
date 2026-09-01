@@ -25,7 +25,7 @@ export default function Dashboard() {
       try {
         const result = await getDashboard();
         setData(result);
-      } catch (err) {
+      } catch  {
         setErreur("Impossible de charger le tableau de bord.");
       } finally {
         setChargement(false);
@@ -51,10 +51,6 @@ export default function Dashboard() {
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>Tableau de bord</h1>
-        <div className="dashboard-user-info">
-          <span>Rôle : {role}</span>
-          <button onClick={handleLogout}>Déconnexion</button>
-        </div>
       </header>
 
       <section className="dashboard-cards">
