@@ -153,7 +153,8 @@ export default function BonCommandeForm() {
                 <td>
                   <input
                     type="number"
-                    step="0.01"
+                    step="1"
+                    min="0" 
                     value={ligne.prixunitaire}
                     onChange={(e) => handleLigneChange(index, "prixunitaire", e.target.value)}
                   />
@@ -161,7 +162,8 @@ export default function BonCommandeForm() {
                 <td>
                   <input
                     type="number"
-                    step="0.01"
+                    step="1"
+                    min="0" 
                     value={ligne.remise}
                     onChange={(e) => handleLigneChange(index, "remise", e.target.value)}
                   />

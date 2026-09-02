@@ -5,6 +5,7 @@ import Entity.BonCommande;
 import Entity.Clients;
 import Entity.LignesCommande;
 import Entity.Reglement;
+import Entity.TypeFacture;
 import Repository.FactureRepository;
 import Util.NombreEnLettresUtil;
 
@@ -38,29 +39,37 @@ public class FacturePdfService {
     public FacturePdfService(FactureRepository factureRepository) {
         this.factureRepository = factureRepository;
     }
-      public byte[] genererPdf(Long idFacture) {
+
+    public byte[] genererPdf(Long idFacture, Boolean inclureSuiviPaiement) {
         Facture facture = factureRepository.findById(idFacture)
                 .orElseThrow(() -> new RuntimeException("Facture introuvable"));
 
         BonCommande bc = facture.getBonCommande();
         Clients client = facture.getClients();
 
+        boolean afficherSuivi = inclureSuiviPaiement != null
+                ? inclureSuiviPaiement
+                : facture.getType() == TypeFacture.DEFINITIVE;
+
         try {
-            
-            Document document = new Document(PageSize.A4, 36, 36, 95, 65);
+            Document document = new Document(PageSize.A4, 36, 36, 100, 65);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfWriter writer = PdfWriter.getInstance(document, baos);
 
-            
             writer.setPageEvent(new EnteteEtPiedDePage());
 
             document.open();
 
             ajouterInfosFacture(document, facture);
             ajouterBlocClient(document, client);
+            ajouterPhraseIntro(document);
             ajouterTableauLignes(document, bc.getLignes());
             ajouterRecapitulatif(document, bc);
-            ajouterSuiviPaiement(document, facture);
+
+            if (afficherSuivi) {
+                ajouterSuiviPaiement(document, facture);
+            }
+
             ajouterConditions(document, facture);
             ajouterMontantEnLettres(document, bc.getTotalTtc());
             ajouterMentionsLegales(document);
@@ -75,6 +84,8 @@ public class FacturePdfService {
 
         private static final Color ORANGE = new Color(237, 125, 49);
         private static final Color NAVY_FOOTER = new Color(20, 25, 35);
+        private static final float LOGO_LARGEUR_MAX = 120;
+        private static final float LOGO_HAUTEUR_MAX = 50;
 
         @Override
         public void onEndPage(PdfWriter writer, Document document) {
@@ -82,24 +93,27 @@ public class FacturePdfService {
             float largeurPage = document.getPageSize().getWidth();
             float hautPage = document.getPageSize().getHeight();
 
-            // EN-TETE
-            float logoLargeur = 90;
+            // EN-TETE 
+            float logoLargeurReelle = LOGO_LARGEUR_MAX; // valeur de repli si le logo est absent
             try {
                 Image logo = Image.getInstance(
                         FacturePdfService.class.getClassLoader().getResource("static/Logotype_Ossan_Asur_Noir.png"));
-                logo.scaleToFit(150,100);
-                logo.setAbsolutePosition(36, hautPage - 55);
+
+                logo.scaleToFit(LOGO_LARGEUR_MAX, LOGO_HAUTEUR_MAX);
+                logoLargeurReelle = logo.getScaledWidth();
+                float logoHauteurReelle = logo.getScaledHeight();
+
+                float logoY = hautPage - 20 - logoHauteurReelle;
+                logo.setAbsolutePosition(36, logoY);
                 cb.addImage(logo);
             } catch (Exception e) {
                 // logo optionnel si le fichier est absent
             }
 
-            
-            // sur le papier a en-tete 
-            float xSeparateur = 36 + logoLargeur + 15;
+            float xSeparateur = 36 + logoLargeurReelle + 15;
             cb.setColorStroke(ORANGE);
             cb.setLineWidth(1.5f);
-            cb.moveTo(xSeparateur, hautPage - 25);
+            cb.moveTo(xSeparateur, hautPage - 18);
             cb.lineTo(xSeparateur, hautPage - 65);
             cb.stroke();
 
@@ -108,23 +122,21 @@ public class FacturePdfService {
 
             ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT,
                     new Phrase("AUDIT - OPTIMISATION - DIGITALISATION", sloganTitreFont),
-                    largeurPage - 36, hautPage - 32, 0);
+                    largeurPage - 36, hautPage - 28, 0);
             ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT,
                     new Phrase("INFRASTRUCTURE - FORMATIONS", sloganTitreFont),
-                    largeurPage - 36, hautPage - 43, 0);
+                    largeurPage - 36, hautPage - 39, 0);
             ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT,
                     new Phrase("OSSAN ASUR, le Digital au service de l'excellence opérationnelle", sloganSousTitreFont),
-                    largeurPage - 36, hautPage - 55, 0);
+                    largeurPage - 36, hautPage - 51, 0);
 
-            // Ligne horizontale orange sous tout l'entete
             cb.setColorStroke(ORANGE);
             cb.setLineWidth(2f);
-            cb.moveTo(0, hautPage - 78);
-            cb.lineTo(largeurPage, hautPage - 78);
+            cb.moveTo(0, hautPage - 85);
+            cb.lineTo(largeurPage, hautPage - 85);
             cb.stroke();
 
-            // PIED DE PAGE 
-            
+            //  PIED DE PAGE
             cb.setColorFill(NAVY_FOOTER);
             cb.rectangle(0, 34, largeurPage, 26);
             cb.fill();
@@ -137,7 +149,6 @@ public class FacturePdfService {
                     new Phrase("ADIDOGOME, 2ème von à droite après la rétention d'eau, sur la route de Ségbé", footerFont),
                     largeurPage / 2, 40, 0);
 
-            
             Font mentionsFont = new Font(Font.HELVETICA, 7, Font.NORMAL, Color.BLACK);
             ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
                     new Phrase("OSSAN ASUR SARL, RC TG-LFW-01-2021-B12-01539, NIF : 1001198231, 22 BP 221 Lomé-Togo", mentionsFont),
@@ -149,12 +160,10 @@ public class FacturePdfService {
         }
     }
 
-
     private void ajouterInfosFacture(Document document, Facture facture) throws DocumentException {
         Font numFont = new Font(Font.HELVETICA, 12, Font.BOLD);
         Font dateFont = new Font(Font.HELVETICA, 10);
 
-        // Numero a gauche, date a droite, sur la meme ligne (tableau 2 colonnes sans bordure)
         PdfPTable ligneEntete = new PdfPTable(2);
         ligneEntete.setWidthPercentage(100);
         ligneEntete.setWidths(new float[]{2, 1});
@@ -172,14 +181,12 @@ public class FacturePdfService {
 
         document.add(new Paragraph("Type : " + facture.getType()));
 
-        // Statut affiche avec une couleur differente selon son sens
-        // (coherent avec le cycle EMISE -> PARTIELLEMENT_PAYEE -> PAYEE / ANNULEE)
         Color couleurStatut;
         switch (facture.getStatut()) {
-            case PAYEE -> couleurStatut = new Color(46, 125, 50); // vert
-            case PARTIELLEMENT_PAYEE -> couleurStatut = new Color(230, 126, 34); // orange
-            case ANNULEE -> couleurStatut = new Color(192, 57, 43); // rouge
-            default -> couleurStatut = new Color(80, 80, 80); // gris (EMISE)
+            case PAYEE -> couleurStatut = new Color(46, 125, 50);
+            case PARTIELLEMENT_PAYEE -> couleurStatut = new Color(230, 126, 34);
+            case ANNULEE -> couleurStatut = new Color(192, 57, 43);
+            default -> couleurStatut = new Color(80, 80, 80);
         }
         Font statutFont = new Font(Font.HELVETICA, 11, Font.BOLD, couleurStatut);
         document.add(new Paragraph("Statut : " + libelleStatut(facture.getStatut()), statutFont));
@@ -189,14 +196,6 @@ public class FacturePdfService {
             document.add(new Paragraph("Motif d'annulation : " + facture.getMotifAnnulation()));
         }
 
-        document.add(Chunk.NEWLINE);
-
-        // Phrase d'introduction, en italique, avant le tableau des lignes
-        
-        Font introFont = new Font(Font.HELVETICA, 10, Font.ITALIC);
-        document.add(new Paragraph(
-                "Nous avons le plaisir de vous transmettre sur votre demande, notre meilleure offre",
-                introFont));
         document.add(Chunk.NEWLINE);
     }
 
@@ -225,12 +224,20 @@ public class FacturePdfService {
         document.add(Chunk.NEWLINE);
     }
 
-    
     private Paragraph ligneLabelValeur(String label, String valeur, Font labelFont, Font valeurFont) {
         Paragraph p = new Paragraph();
         p.add(new Chunk(label + " ", labelFont));
         p.add(new Chunk(valeur != null ? valeur : "", valeurFont));
         return p;
+    }
+
+    // Phrase d'introduction, juste au-dessus du tableau des lignes
+    private void ajouterPhraseIntro(Document document) throws DocumentException {
+        Font introFont = new Font(Font.HELVETICA, 10, Font.ITALIC);
+        document.add(new Paragraph(
+                "Nous avons le plaisir de vous transmettre sur votre demande, notre meilleure offre",
+                introFont));
+        document.add(Chunk.NEWLINE);
     }
 
     private void ajouterTableauLignes(Document document, List<LignesCommande> lignes) throws DocumentException {
@@ -269,7 +276,7 @@ public class FacturePdfService {
         recap.setHorizontalAlignment(Element.ALIGN_RIGHT);
 
         ajouterLigneRecap(recap, "Total HT", bc.getTotalHT());
-        ajouterLigneRecap(recap, "TVA (18%)", bc.getTva());
+        ajouterLigneRecap(recap, "TVA", bc.getTva());
         ajouterLigneRecap(recap, "Total TTC", bc.getTotalTtc());
 
         document.add(recap);
@@ -283,9 +290,6 @@ public class FacturePdfService {
         table.addCell(valeur);
     }
 
-    // Affiche le montant deja paye, le reste a payer, et l'historique des
-    // reglements deja enregistres pour cette facture. Permet de relier
-    // facilement un nouveau reglement a cette facture (numero + reste du).
     private void ajouterSuiviPaiement(Document document, Facture facture) throws DocumentException {
         List<Reglement> reglements = facture.getReglements();
 
@@ -310,8 +314,6 @@ public class FacturePdfService {
         document.add(suivi);
         document.add(Chunk.NEWLINE);
 
-        // Historique des reglements deja enregistres (utile pour relier un
-        // nouveau paiement a cette facture en cas de reglement ulterieur)
         if (reglements != null && !reglements.isEmpty()) {
             document.add(new Paragraph("Historique des règlements :", labelFont));
 
@@ -339,10 +341,7 @@ public class FacturePdfService {
         document.add(Chunk.NEWLINE);
     }
 
-    // Section "Conditions". Si facture.getConditionsPersonnalisees() est
-   
     private void ajouterConditions(Document document, Facture facture) throws DocumentException {
-        Font labelFont = new Font(Font.HELVETICA, 10, Font.BOLD | Font.UNDERLINE);
         Font titreFont = new Font(Font.HELVETICA, 10, Font.BOLD | Font.UNDERLINE);
         Font valeurFont = new Font(Font.HELVETICA, 10);
 
@@ -355,7 +354,7 @@ public class FacturePdfService {
                     document.add(new Paragraph(ligne.trim(), valeurFont));
                 }
             }
-        } 
+        }
         document.add(Chunk.NEWLINE);
     }
 
@@ -378,8 +377,4 @@ public class FacturePdfService {
     private String formatMontant(BigDecimal montant) {
         return NumberFormat.getInstance(Locale.FRANCE).format(montant);
     }
-
-
-
-
 }

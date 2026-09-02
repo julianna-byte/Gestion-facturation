@@ -5,6 +5,8 @@ import {
   enregistrerReglement,
   annulerFacture,
   telechargerPdfFacture,
+  modifierConditions,
+  getFacturePdfBlobUrl,
 } from "../services/factureService";
 
 const MODES_REGLEMENT = ["Espèces", "Virement", "Chèque", "Mobile Money"];
@@ -16,10 +18,16 @@ export default function FactureDetail() {
   const [chargement, setChargement] = useState(true);
   const [actionEnCours, setActionEnCours] = useState(false);
 
-  // Formulaire d'enregistrement de reglement
   const [montant, setMontant] = useState("");
   const [mode, setMode] = useState(MODES_REGLEMENT[0]);
   const [erreurReglement, setErreurReglement] = useState("");
+
+  const [conditions, setConditions] = useState("");
+  const [conditionsEnCours, setConditionsEnCours] = useState(false);
+
+  const [pdfUrl, setPdfUrl] = useState(null);
+  const [chargementApercu, setChargementApercu] = useState(false);
+  const [inclureSuivi, setInclureSuivi] = useState(true);
 
   const navigate = useNavigate();
 
@@ -34,12 +42,43 @@ export default function FactureDetail() {
     try {
       const data = await getFactureById(id);
       setFacture(data);
+      setConditions(data.conditionsPersonnalisees || "");
+      setInclureSuivi(data.type !== "PROFORMA");
     } catch {
       setErreur("Impossible de charger cette facture.");
     } finally {
       setChargement(false);
     }
   }
+
+  const handleSauvegarderConditions = async () => {
+    setConditionsEnCours(true);
+    try {
+      const updated = await modifierConditions(id, conditions);
+      setFacture(updated);
+      if (pdfUrl) {
+        await handleApercu();
+      } else {
+        alert("Conditions enregistrées.");
+      }
+    } catch {
+      alert("Erreur lors de l'enregistrement des conditions.");
+    } finally {
+      setConditionsEnCours(false);
+    }
+  };
+
+  const handleApercu = async () => {
+    setChargementApercu(true);
+    try {
+      const url = await getFacturePdfBlobUrl(id, inclureSuivi);
+      setPdfUrl(url);
+    } catch {
+      alert("Erreur lors de la génération de l'aperçu.");
+    } finally {
+      setChargementApercu(false);
+    }
+  };
 
   const handleReglementSubmit = async (e) => {
     e.preventDefault();
@@ -87,8 +126,8 @@ export default function FactureDetail() {
 
   const handleTelechargerPdf = async () => {
     try {
-      await telechargerPdfFacture(id);
-    } catch  {
+      await telechargerPdfFacture(id, inclureSuivi);
+    } catch {
       alert("Erreur lors du téléchargement du PDF.");
     }
   };
@@ -97,8 +136,9 @@ export default function FactureDetail() {
   if (erreur) return <p className="erreur">{erreur}</p>;
   if (!facture) return null;
 
+  const estProforma = facture.type === "PROFORMA";
   const peutEnregistrerReglement =
-    facture.statut === "EMISE" || facture.statut === "PARTIELLEMENT_PAYEE";
+    !estProforma && (facture.statut === "EMISE" || facture.statut === "PARTIELLEMENT_PAYEE");
   const peutAnnuler = facture.statut !== "ANNULEE";
 
   return (
@@ -113,34 +153,42 @@ export default function FactureDetail() {
 
       <div className="recapitulatif">
         <p>Total TTC : {facture.totalTtc} XOF</p>
-        <p>Montant payé : {facture.montantPaye} XOF</p>
-        <p>
-          <strong>Reste à payer : {facture.resteAPayer} XOF</strong>
-        </p>
+        {!estProforma && (
+          <>
+            <p>Montant payé : {facture.montantPaye} XOF</p>
+            <p>
+              <strong>Reste à payer : {facture.resteAPayer} XOF</strong>
+            </p>
+          </>
+        )}
       </div>
 
-      <h2>Historique des règlements</h2>
-      {facture.reglements && facture.reglements.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Montant</th>
-              <th>Mode</th>
-            </tr>
-          </thead>
-          <tbody>
-            {facture.reglements.map((r) => (
-              <tr key={r.idReglement}>
-                <td>{r.dateReglement}</td>
-                <td>{r.montant} XOF</td>
-                <td>{r.mode}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>Aucun règlement enregistré pour l'instant.</p>
+      {!estProforma && (
+        <>
+          <h2>Historique des règlements</h2>
+          {facture.reglements && facture.reglements.length > 0 ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Montant</th>
+                  <th>Mode</th>
+                </tr>
+              </thead>
+              <tbody>
+                {facture.reglements.map((r) => (
+                  <tr key={r.idReglement}>
+                    <td>{r.dateReglement}</td>
+                    <td>{r.montant} XOF</td>
+                    <td>{r.mode}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>Aucun règlement enregistré pour l'instant.</p>
+          )}
+        </>
       )}
 
       {peutEnregistrerReglement && (
@@ -153,7 +201,8 @@ export default function FactureDetail() {
               <input
                 id="montant"
                 type="number"
-                step="0.01"
+                step="1"
+                min="0" 
                 value={montant}
                 onChange={(e) => setMontant(e.target.value)}
                 required
@@ -176,8 +225,38 @@ export default function FactureDetail() {
         </>
       )}
 
+      <h2>Conditions personnalisées</h2>
+      <p className="note">
+        Modifiable avant de télécharger la version finale.
+      </p>
+      <div className="form-group" style={{ maxWidth: "600px" }}>
+        <textarea
+          rows={5}
+          value={conditions}
+          onChange={(e) => setConditions(e.target.value)}
+          placeholder={"Délai de livraison : 1 semaine\nPaiement : 100% à la commande"}
+        />
+      </div>
+      <button onClick={handleSauvegarderConditions} disabled={conditionsEnCours}>
+        {conditionsEnCours ? "Enregistrement..." : "Enregistrer les conditions"}
+      </button>
+
+      {!estProforma && (
+        <label style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+          <input
+            type="checkbox"
+            checked={inclureSuivi}
+            onChange={(e) => setInclureSuivi(e.target.checked)}
+          />
+          Inclure le suivi de règlement sur le PDF
+        </label>
+      )}
+
       <div className="form-actions">
         <button onClick={() => navigate("/factures")}>Retour à la liste</button>
+        <button onClick={handleApercu} disabled={chargementApercu}>
+          {chargementApercu ? "Génération..." : "Aperçu de la facture"}
+        </button>
         <button onClick={handleTelechargerPdf}>Télécharger le PDF</button>
         {peutAnnuler && (
           <button onClick={handleAnnuler} disabled={actionEnCours}>
@@ -185,7 +264,17 @@ export default function FactureDetail() {
           </button>
         )}
       </div>
+
+      {pdfUrl && (
+        <div style={{ marginTop: "20px" }}>
+          <h2>Aperçu</h2>
+          <iframe
+            src={pdfUrl}
+            title="Aperçu de la facture"
+            style={{ width: "100%", height: "700px", border: "1px solid var(--ossan-border)", borderRadius: "8px" }}
+          />
+        </div>
+      )}
     </div>
   );
 }
-

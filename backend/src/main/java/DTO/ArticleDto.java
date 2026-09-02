@@ -23,6 +23,9 @@ public class ArticleDto {
 
     private String description;
 
+    @DecimalMin(value = "0.0", message = "La marge commerciale ne peut pas être négative")
+    private BigDecimal margeCommerciale;
+
     @NotNull(message = "L'unité est obligatoire")
     private Integer unite;
 

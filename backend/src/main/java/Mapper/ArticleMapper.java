@@ -20,6 +20,7 @@ public class ArticleMapper {
         dto.setUnite(article.getUnite());
         dto.setTauxTva(article.getTauxTva());
         dto.setPrixunitaireHT(article.getPrixunitaireHT());
+        dto.setMargeCommerciale(article.getMargeCommerciale());
         return dto;
     }
     
@@ -32,6 +33,7 @@ public class ArticleMapper {
         article.setUnite(dto.getUnite());
         article.setTauxTva(dto.getTauxTva());
         article.setPrixunitaireHT(dto.getPrixunitaireHT());
+        article.setMargeCommerciale(dto.getMargeCommerciale());
         return article;
     }
 
@@ -43,6 +45,7 @@ public class ArticleMapper {
         article.setUnite(dto.getUnite());
         article.setTauxTva(dto.getTauxTva());
         article.setPrixunitaireHT(dto.getPrixunitaireHT());
+        article.setMargeCommerciale(dto.getMargeCommerciale());
     }
 
 

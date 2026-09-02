@@ -118,14 +118,16 @@ public class FactureController {
     })
 
     @GetMapping("/{id}/pdf")
-    public ResponseEntity<byte[]> telechargerPdf(@PathVariable Long id) {
-        byte[] pdf = facturePdfService.genererPdf(id);
+    public ResponseEntity<byte[]> telechargerPdf(
+        @PathVariable Long id,
+        @RequestParam(required = false) Boolean inclureSuiviPaiement) {
+    byte[] pdf = facturePdfService.genererPdf(id, inclureSuiviPaiement);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=facture-" + id + ".pdf")
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(pdf);
-    }
+    return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=facture-" + id + ".pdf")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(pdf);
+}
 
 
 

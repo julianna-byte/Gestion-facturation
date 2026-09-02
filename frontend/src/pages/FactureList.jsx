@@ -81,7 +81,7 @@ export default function FactureList() {
           {pageData?.content?.map((f) => (
             <tr key={f.idFacture}>
               <td>{f.numerofacture}</td>
-              <td>{f.nomClient}</td>
+              <td>{f.nomClient || f.idClients}</td>
               <td>{f.type}</td>
               <td>{f.totalTtc} XOF</td>
               <td>{f.resteAPayer} XOF</td>

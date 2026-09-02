@@ -9,6 +9,7 @@ const CHAMPS_VIDES = {
   unite: "",
   tauxTva: 18, // valeur par defaut selon RG-02 (18%), modifiable par article
   prixunitaireHT: "",
+  margeCommerciale: ""
 };
 
 export default function ArticleForm() {
@@ -48,6 +49,7 @@ export default function ArticleForm() {
       unite: Number(formData.unite),
       tauxTva: Number(formData.tauxTva),
       prixunitaireHT: Number(formData.prixunitaireHT),
+      margeCommerciale: formData.margeCommerciale ? Number(formData.margeCommerciale) : null,
     };
 
     try {
@@ -109,6 +111,7 @@ export default function ArticleForm() {
             id="unite"
             name="unite"
             type="number"
+            min="0" 
             value={formData.unite}
             onChange={handleChange}
             required
@@ -122,7 +125,8 @@ export default function ArticleForm() {
             id="prixunitaireHT"
             name="prixunitaireHT"
             type="number"
-            step="0.01"
+            step="1"
+            min="0" 
             value={formData.prixunitaireHT}
             onChange={handleChange}
             required
@@ -137,11 +141,26 @@ export default function ArticleForm() {
             name="tauxTva"
             type="number"
             step="0.01"
+            min="0" 
             value={formData.tauxTva}
             onChange={handleChange}
             required
           />
           {erreurs.tauxTva && <span className="erreur-champ">{erreurs.tauxTva}</span>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="margeCommerciale">Marge commerciale (%) — usage interne</label>
+           <input
+           id="margeCommerciale"
+           name="margeCommerciale"
+           type="number"
+           step="0.01"
+           min="0" 
+           value={formData.margeCommerciale || ""}
+           onChange={handleChange}
+          />
+          <span className="note">Jamais affichée au client, ni sur les factures.</span>
         </div>
 
         <div className="form-actions">

@@ -36,10 +36,19 @@ export async function annulerFacture(idFacture, motif) {
   return response.data;
 }
 
-// GET /api/factures/{id}/pdf - telechargement binaire
-export async function telechargerPdfFacture(idFacture) {
+// PATCH /api/factures/{id}/conditions - body texte brut
+export async function modifierConditions(idFacture, conditions) {
+  const response = await api.patch(`/factures/${idFacture}/conditions`, conditions, {
+    headers: { "Content-Type": "text/plain" },
+  });
+  return response.data;
+}
+
+// GET /api/factures/{id}/pdf - telechargement binaire (declenche le download)
+export async function telechargerPdfFacture(idFacture, inclureSuiviPaiement) {
   const response = await api.get(`/factures/${idFacture}/pdf`, {
     responseType: "blob",
+    params: inclureSuiviPaiement !== undefined ? { inclureSuiviPaiement } : {},
   });
   const url = window.URL.createObjectURL(new Blob([response.data]));
   const link = document.createElement("a");
@@ -49,4 +58,13 @@ export async function telechargerPdfFacture(idFacture) {
   link.click();
   link.remove();
   window.URL.revokeObjectURL(url);
+}
+
+// GET /api/factures/{id}/pdf - retourne une URL blob SANS telecharger (apercu inline)
+export async function getFacturePdfBlobUrl(idFacture, inclureSuiviPaiement) {
+  const response = await api.get(`/factures/${idFacture}/pdf`, {
+    responseType: "blob",
+    params: inclureSuiviPaiement !== undefined ? { inclureSuiviPaiement } : {},
+  });
+  return window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
 }
