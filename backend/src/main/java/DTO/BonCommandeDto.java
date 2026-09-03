@@ -26,5 +26,10 @@ public class BonCommandeDto {
    @NotEmpty(message = "Le bon de commande doit contenir au moins une ligne")
     @Valid
     private List<LigneCommandeDto> lignes;
+     
+    //pour tracabilite
+    private java.time.LocalDateTime dateCreation;
+    private java.time.LocalDateTime dateModification;
+    private String auteur;
 
 }

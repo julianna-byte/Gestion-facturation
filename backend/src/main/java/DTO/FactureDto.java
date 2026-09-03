@@ -20,4 +20,9 @@ public class FactureDto {
     private Long idBonCommande;
     private Long idClient;
     private List<ReglementDto> reglements;
+    private String nomClient;
+    private String ConditionsPersonnalisees;
+
+    //tracabilite
+    private String auteur;
 }

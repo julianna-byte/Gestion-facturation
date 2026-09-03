@@ -42,5 +42,10 @@ public class ClientDto {
     private String nif;
 
     private Boolean actif;
+    
+    //pour tracabilite
+    private java.time.LocalDateTime dateCreation;
+    private java.time.LocalDateTime dateModification;
+    private String auteur;
 
 }

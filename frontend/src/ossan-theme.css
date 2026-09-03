@@ -27,7 +27,7 @@
 
 body {
   margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: "Lato","Segoe UI", Arial, sans-serif;
   background: var(--ossan-bg);
   color: var(--ossan-text);
 }
@@ -60,6 +60,9 @@ body {
   color: #FFFFFF;
   font-weight: 600;
   font-size: 15px;
+  /* Ajout d'une barre de separation*/
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 16px;
 }
 
 /* Image du logo dans la sidebar.
@@ -87,6 +90,9 @@ body {
   font-size: 14px;
   border-left: 3px solid transparent;
   transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .sidebar-link:hover {

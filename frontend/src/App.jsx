@@ -113,6 +113,15 @@ function App() {
           />
 
           <Route
+           path="/bons-commande/:id/modifier"
+           element={
+            <ProtectedRoute>
+              <BonCommandeForm />
+            </ProtectedRoute>
+           }
+          />
+
+          <Route
             path="/bons-commande/:id"
             element={
               <ProtectedRoute>

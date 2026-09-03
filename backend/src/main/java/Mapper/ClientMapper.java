@@ -23,6 +23,9 @@ public class ClientMapper {
         dto.setNomcontact(client.getNomcontact());
         dto.setNif(client.getNIF());
         dto.setActif(client.getActif());
+        dto.setDateCreation(client.getDateCreation());
+        dto.setDateModification(client.getDateModification());
+        dto.setAuteur(client.getAuteur());
         return dto;
     }
 

@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getFacturesPaginated } from "../services/factureService";
 
+const STATUT_LABELS = {
+  EMISE: "Émise",
+  PARTIELLEMENT_PAYEE: "Partiellement payée",
+  PAYEE: "Payée",
+  ANNULEE: "Annulée",
+};
+
 const STATUT_STYLE = {
   EMISE: { background: "#e0e0e0", color: "#333" },
   PARTIELLEMENT_PAYEE: { background: "#fff3cd", color: "#856404" },
@@ -21,9 +28,14 @@ function Badge({ statut }) {
         fontWeight: "bold",
       }}
     >
-      {statut}
+      {STATUT_LABELS[statut] || statut}
     </span>
   );
+}
+
+function formatMontant(n) {
+  if (n === null || n === undefined) return "0 XOF";
+  return new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(n) + " XOF";
 }
 
 export default function FactureList() {
@@ -46,7 +58,7 @@ export default function FactureList() {
     try {
       const data = await getFacturesPaginated(page, taillePage);
       setPageData(data);
-    } catch  {
+    } catch {
       setErreur("Impossible de charger les factures.");
     } finally {
       setChargement(false);
@@ -81,10 +93,10 @@ export default function FactureList() {
           {pageData?.content?.map((f) => (
             <tr key={f.idFacture}>
               <td>{f.numerofacture}</td>
-              <td>{f.nomClient || f.idClients}</td>
+              <td>{f.nomClient || "—"}</td>
               <td>{f.type}</td>
-              <td>{f.totalTtc} XOF</td>
-              <td>{f.resteAPayer} XOF</td>
+              <td>{formatMontant(f.totalTtc)}</td>
+              <td>{formatMontant(f.resteAPayer)}</td>
               <td>
                 <Badge statut={f.statut} />
               </td>
@@ -119,4 +131,3 @@ export default function FactureList() {
     </div>
   );
 }
-

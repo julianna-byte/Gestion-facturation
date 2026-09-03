@@ -25,7 +25,9 @@ public class BonCommandeMapper {
         dto.setTotalHT(bc.getTotalHT());
         dto.setTva(bc.getTva());
         dto.setTotalTtc(bc.getTotalTtc());
-
+        dto.setDateCreation(bc.getDateCreation());
+        dto.setDateModification(bc.getDateModification());
+        dto.setAuteur(bc.getAuteur());
 
         List<LigneCommandeDto> lignesDTO = bc.getLignes().stream()
                 .map(this::toLigneDTO)

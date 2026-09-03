@@ -22,8 +22,18 @@ public class FactureMapper {
         dto.setStatut(facture.getStatut().name());
     
         dto.setTotalTtc(facture.getTotalTtc());
+
+        dto.setDateCreation(facture.getDateCreation() != null ? facture.getDateCreation().toLocalDate(): null);
+
         dto.setIdBonCommande(facture.getBonCommande() != null ? facture.getBonCommande().getIdBonCommande() : null);
+
         dto.setIdClient(facture.getClients().getIdClient());
+
+        dto.setNomClient(facture.getClients().getRaisonsociale());
+
+        dto.setConditionsPersonnalisees(facture.getConditionsPersonnalisees());
+        
+        dto.setAuteur(facture.getAuteur());
 
       List<ReglementDto> reglementsDTO = facture.getReglements() != null
                 ? facture.getReglements().stream().map(this::toReglementDTO).collect(Collectors.toList())

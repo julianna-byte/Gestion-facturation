@@ -90,6 +90,7 @@ export default function ArticleList() {
             <th>Libellé</th>
             <th>Prix unitaire HT</th>
             <th>TVA</th>
+            {isAdmin && <th>Marge (%)</th>}
             {isAdmin && <th>Actions</th>}
           </tr>
         </thead>
@@ -100,6 +101,7 @@ export default function ArticleList() {
               <td>{article.libelle}</td>
               <td>{article.prixunitaireHT} XOF</td>
               <td>{article.tauxTva} %</td>
+              {isAdmin && <td>{article.margeCommerciale ?? "—"} %</td>}
               {isAdmin && (
                 <td>
                   <button onClick={() => navigate(`/catalogue/${article.idArticles}`)}>

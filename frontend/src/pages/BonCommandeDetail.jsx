@@ -126,6 +126,10 @@ export default function BonCommandeDetail() {
 
         {bc.statut === "BROUILLON" && (
           <>
+            <button onClick={() => navigate(`/ bons-commande/${bc.idBonCommande}/modifier`)}>
+              Modifier
+            </button>
+
             <button onClick={handleValider} disabled={actionEnCours}>
               Valider
             </button>

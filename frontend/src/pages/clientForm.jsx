@@ -74,6 +74,14 @@ export default function ClientForm() {
 
       {erreurGenerale && <p className="erreur">{erreurGenerale}</p>}
 
+      {estModification && formData.dateCreation && (
+       <p className="note" style={{ marginBottom: "16px" }}>
+         Créé le {new Date(formData.dateCreation).toLocaleString("fr-FR")}
+         {formData.auteur && ` par ${formData.auteur}`}
+         {formData.dateModification && ` — Modifié le ${new Date(formData.dateModification).toLocaleString("fr-FR")}`}
+        </p>
+      )}
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="raisonsociale">Raison sociale *</label>

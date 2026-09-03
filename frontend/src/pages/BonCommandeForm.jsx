@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createBonCommande } from "../services/bonCommandeService";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  createBonCommande,
+  updateBonCommande,
+  getBonCommandeById,
+} from "../services/bonCommandeService";
 import { getClientsPaginated } from "../services/clientService";
 import { getArticlesPaginated } from "../services/articleService";
 
@@ -9,6 +13,9 @@ function nouvelleLigne() {
 }
 
 export default function BonCommandeForm() {
+  const { id } = useParams();
+  const estModification = !!id;
+
   const [clients, setClients] = useState([]);
   const [articles, setArticles] = useState([]);
   const [idClient, setIdClient] = useState("");
@@ -16,18 +23,55 @@ export default function BonCommandeForm() {
   const [erreurGenerale, setErreurGenerale] = useState("");
   const [chargement, setChargement] = useState(true);
   const [envoi, setEnvoi] = useState(false);
+  const [tracabilite, setTracabilite] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    Promise.all([getClientsPaginated(0, 100), getArticlesPaginated(0, 100)])
-      .then(([clientsData, articlesData]) => {
+    async function init() {
+      try {
+        const [clientsData, articlesData] = await Promise.all([
+          getClientsPaginated(0, 100),
+          getArticlesPaginated(0, 100),
+        ]);
         setClients(clientsData.content.filter((c) => c.actif));
         setArticles(articlesData.content);
-      })
-      .catch(() => setErreurGenerale("Impossible de charger clients/articles."))
-      .finally(() => setChargement(false));
-  }, []);
+
+        if (estModification) {
+          const bc = await getBonCommandeById(id);
+
+          if (bc.statut !== "BROUILLON") {
+            setErreurGenerale(
+              "Ce bon de commande n'est plus modifiable (statut : " + bc.statut + ")."
+            );
+            setChargement(false);
+            return;
+          }
+
+          setIdClient(String(bc.idClients));
+          setLignes(
+            bc.lignes.map((l) => ({
+              idArticles: String(l.idArticles),
+              quantite: l.quantite,
+              prixunitaire: l.prixunitaire,
+              remise: l.remise || 0,
+            }))
+          );
+          setTracabilite({
+            dateCreation: bc.dateCreation,
+            dateModification: bc.dateModification,
+            auteur: bc.auteur,
+          });
+        }
+      } catch {
+        setErreurGenerale("Impossible de charger les données.");
+      } finally {
+        setChargement(false);
+      }
+    }
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const handleLigneChange = (index, champ, valeur) => {
     setLignes((prev) => {
@@ -74,11 +118,15 @@ export default function BonCommandeForm() {
           remise: l.remise ? Number(l.remise) : 0,
         })),
       };
-      const created = await createBonCommande(dto);
-      navigate(`/bons-commande/${created.idBonCommande}`);
+
+      const resultat = estModification
+        ? await updateBonCommande(id, dto)
+        : await createBonCommande(dto);
+
+      navigate(`/bons-commande/${resultat.idBonCommande}`);
     } catch (err) {
       setErreurGenerale(
-        err.response?.data?.message || "Erreur lors de la création du bon de commande."
+        err.response?.data?.message || "Erreur lors de l'enregistrement du bon de commande."
       );
     } finally {
       setEnvoi(false);
@@ -89,9 +137,28 @@ export default function BonCommandeForm() {
     return <div>Chargement...</div>;
   }
 
+  // Bon non-BROUILLON : on bloque l'edition, on affiche juste l'erreur + retour
+  if (estModification && erreurGenerale && lignes.length === 1 && !lignes[0].idArticles) {
+    return (
+      <div className="boncommande-form">
+        <p className="erreur">{erreurGenerale}</p>
+        <button onClick={() => navigate(`/bons-commande/${id}`)}>Retour au détail</button>
+      </div>
+    );
+  }
+
   return (
     <div className="boncommande-form">
-      <h1>Nouveau bon de commande</h1>
+      <h1>{estModification ? "Modifier le bon de commande" : "Nouveau bon de commande"}</h1>
+
+      {tracabilite && tracabilite.dateCreation && (
+        <p className="note" style={{ marginBottom: "16px" }}>
+          Créé le {new Date(tracabilite.dateCreation).toLocaleString("fr-FR")}
+          {tracabilite.auteur && ` par ${tracabilite.auteur}`}
+          {tracabilite.dateModification &&
+            ` — Modifié le ${new Date(tracabilite.dateModification).toLocaleString("fr-FR")}`}
+        </p>
+      )}
 
       {erreurGenerale && <p className="erreur">{erreurGenerale}</p>}
 
@@ -153,8 +220,8 @@ export default function BonCommandeForm() {
                 <td>
                   <input
                     type="number"
-                    step="1"
-                    min="0" 
+                    step="0.01"
+                    min="0"
                     value={ligne.prixunitaire}
                     onChange={(e) => handleLigneChange(index, "prixunitaire", e.target.value)}
                   />
@@ -162,8 +229,8 @@ export default function BonCommandeForm() {
                 <td>
                   <input
                     type="number"
-                    step="1"
-                    min="0" 
+                    step="0.01"
+                    min="0"
                     value={ligne.remise}
                     onChange={(e) => handleLigneChange(index, "remise", e.target.value)}
                   />
@@ -185,16 +252,15 @@ export default function BonCommandeForm() {
         </button>
 
         <p className="note">
-          Les totaux (HT, TVA, TTC) seront calculés automatiquement par le
-          serveur après enregistrement.
+          Les totaux (HT, TVA, TTC) seront calculés automatiquement par le serveur après enregistrement.
         </p>
 
         <div className="form-actions">
-          <button type="button" onClick={() => navigate("/bons-commande")}>
+          <button type="button" onClick={() => navigate(estModification ? `/bons-commande/${id}` : "/bons-commande")}>
             Annuler
           </button>
           <button type="submit" disabled={envoi}>
-            {envoi ? "Enregistrement..." : "Enregistrer le brouillon"}
+            {envoi ? "Enregistrement..." : estModification ? "Enregistrer les modifications" : "Enregistrer le brouillon"}
           </button>
         </div>
       </form>
