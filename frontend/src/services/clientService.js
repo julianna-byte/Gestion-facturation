@@ -38,3 +38,9 @@ export async function updateClient(id, clientData) {
 export async function deactivateClient(id) {
   await api.patch(`/clients/${id}/desactiver`);
 }
+
+// PATCH /api/clients/{id}/reactiver
+export const reactivateClient = async (id) => {
+  const response = await api.patch(`/clients/${id}/reactiver`);
+  return response.data;
+};

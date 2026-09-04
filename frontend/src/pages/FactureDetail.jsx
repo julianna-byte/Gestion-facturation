@@ -151,6 +151,13 @@ export default function FactureDetail() {
         </p>
       </header>
 
+      {facture.dateCreation && (
+       <p className="note">
+       Créée le {new Date(facture.dateCreation).toLocaleString("fr-FR")}
+       {facture.auteur && ` par ${facture.auteur}`}
+       </p>
+      )}
+
       <div className="recapitulatif">
         <p>Total TTC : {facture.totalTtc} XOF</p>
         {!estProforma && (

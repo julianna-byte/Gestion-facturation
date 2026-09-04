@@ -4,6 +4,7 @@ import {
   getClientsPaginated,
   searchClients,
   deactivateClient,
+  reactivateClient
 } from "../services/clientService";
 
 export default function ClientList() {
@@ -44,7 +45,7 @@ export default function ClientList() {
 
   const handleDeactivate = async (id, raisonsociale) => {
     const confirmed = window.confirm(
-      `Désactiver le client "${raisonsociale}" ? Cette action est réversible uniquement en base.`
+      `Désactiver le client "${raisonsociale}" ? `
     );
     if (!confirmed) return;
 
@@ -55,6 +56,25 @@ export default function ClientList() {
       alert("Erreur lors de la désactivation.");
     }
   };
+
+  const handleReactivate = async (id, raisonSociale) => {
+  const confirmed = window.confirm(
+    `Réactiver le client "${raisonSociale}" ?`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await reactivateClient(id);
+    chargerClients();
+  } catch (err) {
+    if (err.response?.status === 403) {
+      alert("Action réservée aux administrateurs.");
+    } else {
+      alert("Erreur lors de la réactivation du client.");
+    }
+  }
+};
 
   if (chargement && !pageData) {
     return <div>Chargement des clients...</div>;
@@ -104,7 +124,7 @@ export default function ClientList() {
                 <button onClick={() => navigate(`/clients/${client.idClient}`)}>
                   Modifier
                 </button>
-                {client.actif && (
+                {client.actif ? (
                   <button
                     onClick={() =>
                       handleDeactivate(client.idClient, client.raisonsociale)
@@ -112,6 +132,15 @@ export default function ClientList() {
                   >
                     Désactiver
                   </button>
+                  
+                  ) : (
+                <button
+                  onClick={() =>
+                   handleReactivate(client.idClient, client.raisonsociale)
+                  }
+                >
+                 Réactiver
+                 </button>
                 )}
               </td>
             </tr>

@@ -1,0 +1,4 @@
+ALTER TABLE Articles
+ADD COLUMN datecreation TIMESTAMP,
+ADD COLUMN datemodification TIMESTAMP,
+ADD COLUMN auteur VARCHAR(255);

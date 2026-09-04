@@ -2,15 +2,16 @@ package Entity;
 
 
 import java.math.BigDecimal;
-
+import lombok.EqualsAndHashCode;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "Articles")
 
-public class Articles {
+public class Articles extends Auditable {
 
     @Id
     @GeneratedValue(strategy =   GenerationType.IDENTITY)

@@ -124,6 +124,12 @@ public class ClientController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/reactiver")
+     public ResponseEntity<Void> reactivate(@PathVariable Long id) {
+     clientService.reactivate(id);
+     return ResponseEntity.noContent().build();
+    }
+
 
 
 

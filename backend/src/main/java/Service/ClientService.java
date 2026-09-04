@@ -66,7 +66,16 @@ public List<ClientDto> findAll() {
         client.setActif(false);
         clientRepository.save(client);
     }
+    
+    // Réactiver client
+     public void reactivate(Long id) {
 
+       Clients client = clientRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Client introuvable avec l'id : " + id));
+
+        client.setActif(true);
+       clientRepository.save(client);
+    }
 
 
 

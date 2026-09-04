@@ -21,6 +21,9 @@ public class ArticleMapper {
         dto.setTauxTva(article.getTauxTva());
         dto.setPrixunitaireHT(article.getPrixunitaireHT());
         dto.setMargeCommerciale(article.getMargeCommerciale());
+        dto.setDateCreation(article.getDateCreation());
+        dto.setDateModification(article.getDateModification());
+        dto.setAuteur(article.getAuteur());
         return dto;
     }
     

@@ -23,6 +23,11 @@ public class ArticleDto {
 
     private String description;
 
+    // Traçabilité
+    private java.time.LocalDateTime dateCreation;
+    private java.time.LocalDateTime dateModification;
+    private String auteur;
+
     @DecimalMin(value = "0.0", message = "La marge commerciale ne peut pas être négative")
     private BigDecimal margeCommerciale;
 

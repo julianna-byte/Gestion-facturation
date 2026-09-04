@@ -92,6 +92,14 @@ export default function BonCommandeDetail() {
         </p>
       </header>
 
+      {bc.dateCreation && (
+       <p className="note">
+       Créé le {new Date(bc.dateCreation).toLocaleString("fr-FR")}
+       {bc.auteur && ` par ${bc.auteur}`}
+       {bc.dateModification && ` — Modifié le ${new Date(bc.dateModification).toLocaleString("fr-FR")}`}
+       </p>
+      )}
+
       <table>
         <thead>
           <tr>
@@ -126,7 +134,7 @@ export default function BonCommandeDetail() {
 
         {bc.statut === "BROUILLON" && (
           <>
-            <button onClick={() => navigate(`/ bons-commande/${bc.idBonCommande}/modifier`)}>
+            <button onClick={() => navigate(`/bons-commande/${bc.idBonCommande}/modifier`)}>
               Modifier
             </button>
 

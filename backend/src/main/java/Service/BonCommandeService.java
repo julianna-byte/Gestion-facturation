@@ -148,60 +148,63 @@ public class BonCommandeService {
    private void calculerTotaux(BonCommande bc) {
 
     BigDecimal totalHT = BigDecimal.ZERO;
+    BigDecimal totalTva = BigDecimal.ZERO;
 
     for (LignesCommande ligne : bc.getLignes()) {
 
+        // Calcul du montant HT de la ligne
         BigDecimal montantLigne = ligne.getPrixunitaire()
                 .multiply(BigDecimal.valueOf(ligne.getQuantite()))
                 .subtract(
-                    ligne.getRemise() != null
-                        ? ligne.getRemise()
-                        : BigDecimal.ZERO
-                );
+                        ligne.getRemise() != null
+                                ? ligne.getRemise()
+                                : BigDecimal.ZERO
+                )
+                .setScale(2, RoundingMode.HALF_UP);
 
+        // Récupération du taux de TVA de l'article
+        BigDecimal tauxTva;
+
+        if (ligne.getArticles() != null
+                && ligne.getArticles().getTauxTva() != null) {
+
+            tauxTva = ligne.getArticles()
+                    .getTauxTva()
+                    .divide(
+                            new BigDecimal("100"),
+                            4,
+                            RoundingMode.HALF_UP
+                    );
+
+        } else {
+            // TVA par défaut : 18 %
+            tauxTva = new BigDecimal("0.18");
+        }
+
+        // Calcul de la TVA de la ligne
+        BigDecimal tvaLigne = montantLigne
+                .multiply(tauxTva)
+                .setScale(2, RoundingMode.HALF_UP);
+
+        // Addition des totaux
         totalHT = totalHT.add(montantLigne);
+        totalTva = totalTva.add(tvaLigne);
     }
 
-    // TVA de 18 %
-    BigDecimal tauxTva = new BigDecimal("0.18");
-
-    BigDecimal tva = totalHT
-            .multiply(tauxTva)
+    // Calcul du TTC
+    BigDecimal totalTtc = totalHT
+            .add(totalTva)
             .setScale(2, RoundingMode.HALF_UP);
 
-    BigDecimal totalTtc = totalHT.add(tva);
-
+    // Enregistrement des totaux dans le bon de commande
     bc.setTotalHT(
             totalHT.setScale(2, RoundingMode.HALF_UP)
     );
 
-    bc.setTva(tva);
-
-    bc.setTotalTtc(
-            totalTtc.setScale(2, RoundingMode.HALF_UP)
+    bc.setTva(
+            totalTva.setScale(2, RoundingMode.HALF_UP)
     );
+
+    bc.setTotalTtc(totalTtc);
 }
-}   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
+}
